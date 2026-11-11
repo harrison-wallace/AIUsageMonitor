@@ -33,7 +33,7 @@
                            TextWrapping="Wrap"
                            Foreground="#8B93A1"
                            FontSize="12"
-                           Text="Each account gets its own card in the overlay. Adding an account opens a terminal where you log in with the official claude CLI into a separate config folder; adding an account never changes which account the CLI itself uses. Only 'Switch CLI to this' does that, and the login you switch away from is kept as its own entry so you can switch back." />
+                           Text="Each account gets its own card in the overlay. Adding an account shows a sign-in link you can copy or open in a private window, then asks for the code from the sign-in page. Adding an account never changes which account the CLI itself uses. Only 'Switch CLI to this' does that, and the login you switch away from is kept as its own entry so you can switch back." />
                 <TextBlock x:Name="ActiveAccountTextBlock"
                            Margin="0,10,0,0"
                            TextWrapping="Wrap"
@@ -70,13 +70,6 @@
                             Height="34"
                             Content="Add account"
                             Click="AddAccountButtonOnClick" />
-                    <Button x:Name="CancelLoginButton"
-                            Width="120"
-                            Height="34"
-                            Margin="8,0,0,0"
-                            Content="Cancel login"
-                            Visibility="Collapsed"
-                            Click="CancelLoginButtonOnClick" />
                 </StackPanel>
 
                 <Button Grid.Column="1"

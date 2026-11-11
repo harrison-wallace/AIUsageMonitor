@@ -10,6 +10,15 @@ which change gets which increment.
 
 ### Changed
 
+- Adding a Claude account no longer opens a terminal or a browser by itself. A sign-in window shows the
+  link with **Copy link**, **Open in <your browser> private window**, and **Open in browser**, then takes
+  the code from the sign-in page. An optional email is filled in on the sign-in page.
+- A Claude sign-in is saved only after the app checks who signed in. A login as an account that is
+  already saved, or as a different email than the one given, is rejected and nothing is saved.
+  Before, a browser already signed in to claude.ai silently added a second copy of that account.
+- Adding the first saved Claude account also saves the current `claude` CLI login, so its card no
+  longer disappears.
+
 - Quota cards show the percent **used**, the same direction as Claude Code's `/usage`. Rows read
   `33% used`, card headlines read `Anthropic - 33% used`, and bars fill as quota is used. The mini
   strip shows only the number. Status colours still turn amber and red as quota runs out. Credit

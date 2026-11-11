@@ -32,7 +32,6 @@ public partial class AnthropicAccountsWindow : Window
     private readonly ClaudeAccountSwitchService _switchService;
     private readonly ClaudeSlotIdentityService? _slotIdentityService;
 
-    private CancellationTokenSource? _loginCancellation;
     private string _activeAccountUuid = string.Empty;
     private bool _busy;
 
@@ -74,7 +73,6 @@ public partial class AnthropicAccountsWindow : Window
 
     private void CloseButtonOnClick(object sender, RoutedEventArgs e)
     {
-        _loginCancellation?.Cancel();
         DialogResult = true;
     }
 
@@ -85,127 +83,65 @@ public partial class AnthropicAccountsWindow : Window
             return;
         }
 
-        var label = PromptForLabel();
-        if (label is null)
+        var hadSavedAccounts = _settingsService.Load().GetAccounts(KnownProviders.Anthropic).Any(account => !account.IsDefault);
+        var window = new ClaudeLoginWindow(_accountManager) { Owner = this };
+        if (window.ShowDialog() != true || window.Result is not { Succeeded: true, Account: { } account, Identity: { } identity })
         {
             return;
         }
 
-        var account = _accountManager.CreateAccount(label);
         RefreshRequested = true;
+        var message = $"Added '{account.Label}' ({identity.Email}).";
+        if (!hadSavedAccounts)
+        {
+            message += await KeepCurrentCliLoginAsync(identity);
+        }
+
+        StatusTextBlock.Text = message;
         RebuildAccountRows();
-        await RunLoginAsync(account);
+        _ = DetectActiveAccountAsync();
     }
 
-    private async Task RunLoginAsync(ProviderAccount account)
+    // The first saved account hides the plain ~/.claude card. Save the current CLI login as its
+    // own account too, so adding a second account never makes the first one disappear.
+    private async Task<string> KeepCurrentCliLoginAsync(AnthropicAccountManagerService.AccountIdentity added)
     {
-        _busy = true;
-        _loginCancellation = new CancellationTokenSource();
-        AddAccountButton.IsEnabled = false;
-        CancelLoginButton.Visibility = Visibility.Visible;
-        StatusTextBlock.Text = $"Waiting for claude /login to finish in the terminal window for '{account.Label}'... " +
-            "If the login screen did not open automatically, type /login in that window.";
+        if (_slotIdentityService is null || !_slotIdentityService.HasLogin)
+        {
+            return string.Empty;
+        }
 
-        try
+        var slot = await _slotIdentityService.ResolveAsync(CancellationToken.None);
+        if (slot is null || !slot.IsVerified || string.IsNullOrWhiteSpace(slot.Uuid))
         {
-            var result = await _accountManager.LaunchLoginAsync(account, _loginCancellation.Token);
-            if (result.Succeeded)
-            {
-                var loggedInText = string.IsNullOrWhiteSpace(result.Message)
-                    ? $"'{account.Label}' is logged in."
-                    : $"'{account.Label}' is logged in as {result.Message}.";
-                var isNowActive = !string.IsNullOrWhiteSpace(account.AccountUuid) &&
-                    string.Equals(account.AccountUuid, _activeAccountUuid, StringComparison.OrdinalIgnoreCase);
-                StatusTextBlock.Text = isNowActive
-                    ? loggedInText
-                    : loggedInText + " Its usage is now monitored; the claude CLI itself still uses the active account above. Click 'Switch CLI to this' to change that.";
-                RefreshRequested = true;
-            }
-            else
-            {
-                StatusTextBlock.Text = result.Message;
-            }
+            return " Your current claude login could not be checked, so it was not saved. Add it too if you want its card to stay.";
         }
-        catch (OperationCanceledException)
+
+        if (string.Equals(slot.Uuid, added.Uuid, StringComparison.OrdinalIgnoreCase))
         {
-            StatusTextBlock.Text = "Login wait cancelled. Use 'Log in again' on the account to retry detection.";
+            return string.Empty;
         }
-        finally
+
+        return _switchService.AdoptSlotLoginIfUnsaved(new AnthropicAccountManagerService.AccountIdentity(slot.Email, slot.Uuid))
+            ? $" Your current claude login ({slot.Email}) was saved too, so its card stays."
+            : string.Empty;
+    }
+
+    private void SignInAgain(ProviderAccount account)
+    {
+        if (_busy)
         {
-            _busy = false;
-            _loginCancellation?.Dispose();
-            _loginCancellation = null;
-            AddAccountButton.IsEnabled = true;
-            CancelLoginButton.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var window = new ClaudeLoginWindow(_accountManager, account) { Owner = this };
+        if (window.ShowDialog() == true && window.Result is { Succeeded: true } result)
+        {
+            RefreshRequested = true;
+            StatusTextBlock.Text = $"'{account.Label}' is signed in again as {result.Message}.";
             RebuildAccountRows();
             _ = DetectActiveAccountAsync();
         }
-    }
-
-    private void CancelLoginButtonOnClick(object sender, RoutedEventArgs e)
-    {
-        _loginCancellation?.Cancel();
-    }
-
-    private string? PromptForLabel()
-    {
-        var promptWindow = new Window
-        {
-            Title = "Add Claude account",
-            Width = 380,
-            Height = 190,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            ResizeMode = ResizeMode.NoResize,
-            Background = Background,
-            Foreground = Foreground,
-            Owner = this,
-            ShowInTaskbar = false
-        };
-
-        var panel = new WpfStackPanel { Margin = new Thickness(18) };
-        panel.Children.Add(new WpfTextBlock
-        {
-            Text = "Name this account (for example: Work, Personal, Max):",
-            Foreground = PrimaryTextBrush,
-            FontSize = 13,
-            TextWrapping = TextWrapping.Wrap
-        });
-        var labelTextBox = new WpfTextBox
-        {
-            Margin = new Thickness(0, 10, 0, 0),
-            Height = 32,
-            Padding = new Thickness(8, 5, 8, 5),
-            Background = InputBackgroundBrush,
-            Foreground = InputForegroundBrush,
-            CaretBrush = InputForegroundBrush,
-            BorderBrush = RowBorderBrush,
-            FontSize = 14
-        };
-        panel.Children.Add(labelTextBox);
-
-        var buttonPanel = new WpfStackPanel
-        {
-            Orientation = WpfOrientation.Horizontal,
-            HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
-            Margin = new Thickness(0, 16, 0, 0)
-        };
-        var okButton = new WpfButton { Content = "Start login", Width = 100, Height = 30, IsDefault = true };
-        var cancelButton = new WpfButton { Content = "Cancel", Width = 80, Height = 30, Margin = new Thickness(8, 0, 0, 0), IsCancel = true };
-        okButton.Click += (_, _) =>
-        {
-            if (!string.IsNullOrWhiteSpace(labelTextBox.Text))
-            {
-                promptWindow.DialogResult = true;
-            }
-        };
-        buttonPanel.Children.Add(okButton);
-        buttonPanel.Children.Add(cancelButton);
-        panel.Children.Add(buttonPanel);
-
-        promptWindow.Content = panel;
-        labelTextBox.Focus();
-
-        return promptWindow.ShowDialog() == true ? labelTextBox.Text.Trim() : null;
     }
 
     private async Task DetectActiveAccountAsync()
@@ -395,13 +331,7 @@ public partial class AnthropicAccountsWindow : Window
                 Margin = new Thickness(0, 6, 0, 0),
                 IsEnabled = !_busy
             };
-            loginButton.Click += async (_, _) =>
-            {
-                if (!_busy)
-                {
-                    await RunLoginAsync(account);
-                }
-            };
+            loginButton.Click += (_, _) => SignInAgain(account);
             buttonPanel.Children.Add(loginButton);
 
             var removeButton = new WpfButton

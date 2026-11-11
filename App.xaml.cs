@@ -41,6 +41,22 @@ public partial class App : System.Windows.Application
             return;
         }
 
+        if (TryGetNamedScreenshotOptions(e.Args, "--screenshot-claude-login", out var loginScreenshotPath, out _, out _))
+        {
+            try
+            {
+                ScreenshotService.SaveClaudeLoginScreenshot(loginScreenshotPath);
+                Shutdown();
+            }
+            catch (Exception exception)
+            {
+                Console.Error.WriteLine($"Could not save Claude sign-in screenshot: {exception.Message}");
+                Shutdown(1);
+            }
+
+            return;
+        }
+
         if (TryGetNamedScreenshotOptions(e.Args, "--screenshot-accounts", out var accountsScreenshotPath, out var accountsScreenshotWidth, out var accountsScreenshotHeight))
         {
             try

@@ -205,7 +205,7 @@ Read the linked doc before you change the feature.
 
 | Feature | Doc | Constraint that is easy to miss |
 | --- | --- | --- |
-| Claude accounts, slot identity, account switch | [docs/claude-accounts.md](docs/claude-accounts.md) | The `~/.claude` slot identity is resolved live every refresh. Token and `oauthAccount` block always move together. |
+| Claude accounts, sign-in, slot identity, account switch | [docs/claude-accounts.md](docs/claude-accounts.md) | The `~/.claude` slot identity is resolved live every refresh. Token and `oauthAccount` block always move together. Sign-in saves nothing until the identity is checked. |
 | OpenAI saved accounts | [docs/openai-accounts.md](docs/openai-accounts.md) | Isolated Codex homes. Never read shared sessions or switch the normal Codex login. |
 | Claude usage credits and website billing | [docs/claude-usage-credits.md](docs/claude-usage-credits.md) | `spend.balance: null` never means zero. Billing reads go through the WebView2 browser, not `HttpClient`. |
 | ChatGPT purchased credits | `Collectors\CodexCredits.cs` | A credit count, not dollars. Added only when the account holds credits. |
@@ -219,6 +219,7 @@ Screenshots render offscreen from fake data. They never read real settings or cr
 - Settings: `-- --screenshot-settings .\docs\screenshot-settings.png`
 - Claude accounts: `-- --screenshot-accounts .\docs\screenshot-accounts.png`
 - OpenAI accounts: `-- --screenshot-openai-accounts .\docs\screenshot-openai-accounts.png`
+- Claude sign-in window, step 2 with a demo link: `-- --screenshot-claude-login <path.png>`. The private-window button names this PC's default browser.
 
 ---
 

@@ -119,6 +119,50 @@ internal static class ScreenshotService
         }
     }
 
+    // Renders the Claude sign-in window at step 2 with a demo link. No CLI runs and no real
+    // settings or credentials are read.
+    public static void SaveClaudeLoginScreenshot(string outputPath)
+    {
+        var fullPath = Path.GetFullPath(outputPath);
+        var outputDirectory = Path.GetDirectoryName(fullPath) ?? Environment.CurrentDirectory;
+        var tempDirectory = Path.Combine(Path.GetTempPath(), "AIUsageMonitor.Screenshot", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDirectory);
+        var settingsService = new AppSettingsService(tempDirectory);
+        var manager = new AnthropicAccountManagerService(
+            settingsService, new AppLogService(tempDirectory), accountsRootDirectory: Path.Combine(tempDirectory, "accounts"));
+        var window = new ClaudeLoginWindow(manager)
+        {
+            Left = 0,
+            Top = 0,
+            ShowInTaskbar = false,
+            WindowStyle = WindowStyle.None,
+            WindowStartupLocation = WindowStartupLocation.Manual
+        };
+        window.ShowSignInStepForScreenshot(
+            "Crypto",
+            "crypto@example.com",
+            "https://claude.com/cai/oauth/authorize?code=true&client_id=9d1c250a-e61b-44d9-88ed-5944d1962f5e&response_type=code&state=demo");
+
+        try
+        {
+            window.Show();
+            window.Dispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
+            window.UpdateLayout();
+            var bitmap = new RenderTargetBitmap(
+                Math.Max(1, (int)Math.Ceiling(window.ActualWidth)),
+                Math.Max(1, (int)Math.Ceiling(window.ActualHeight)),
+                96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(window);
+            SaveBitmap(bitmap, fullPath, outputDirectory);
+        }
+        finally
+        {
+            window.Close();
+            try { Directory.Delete(tempDirectory, recursive: true); }
+            catch (IOException) { }
+        }
+    }
+
     public static void SaveAccountsScreenshot(string outputPath, double? requestedWidth = null, double? requestedHeight = null)
     {
         var fullPath = Path.GetFullPath(outputPath);

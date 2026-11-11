@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -14,8 +13,8 @@ namespace AIUsageMonitor.Services;
 // logs into once; afterwards the app reads and refreshes that dir's .credentials.json itself.
 public sealed class AnthropicAccountManagerService
 {
-    private static readonly TimeSpan LoginPollInterval = TimeSpan.FromSeconds(2);
-    private static readonly TimeSpan LoginTimeout = TimeSpan.FromMinutes(5);
+    // Temporary login folders. DiscardStaging deletes only folders with this prefix.
+    private const string StagingPrefix = ".login-";
 
     private static readonly HttpClient SharedHttpClient = new()
     {
@@ -141,68 +140,214 @@ public sealed class AnthropicAccountManagerService
         return found;
     }
 
-    // Launches the official claude CLI in a visible terminal with CLAUDE_CONFIG_DIR pointed
-    // at the account dir, then waits for a (new) .credentials.json to appear. Returns the
-    // account with identity filled in on success, null on timeout/cancel/missing CLI.
-    public async Task<LoginResult> LaunchLoginAsync(ProviderAccount account, CancellationToken cancellationToken)
+    // Starts `claude auth login` into a fresh staging folder. Nothing is saved until
+    // CompleteLoginAsync confirms which account signed in, so a wrong-account or duplicate
+    // login never replaces a working one.
+    // `claudePath` is for tests; normally the CLI on PATH is used.
+    public PendingLogin StartLogin(string? emailHint, string? claudePath = null)
+    {
+        claudePath ??= CommandPathResolver.FindCommandPath("claude")
+            ?? throw new InvalidOperationException("The claude CLI was not found on PATH. Install Claude Code first.");
+        var stagingDirectory = Path.Combine(AccountsRootDirectory, StagingPrefix + Guid.NewGuid().ToString("N")[..8]);
+        Directory.CreateDirectory(stagingDirectory);
+        try
+        {
+            var noBrowserCommand = ClaudeLoginSession.EnsureNoBrowserCommand(AccountsRootDirectory);
+            return new PendingLogin(ClaudeLoginSession.Start(claudePath, stagingDirectory, emailHint, noBrowserCommand), stagingDirectory);
+        }
+        catch
+        {
+            DiscardStaging(stagingDirectory);
+            throw;
+        }
+    }
+
+    // Waits for the CLI to accept the pasted code, confirms the identity, then saves it: as a new
+    // account when `existing` is null, otherwise into that account. On any failure the staging
+    // folder is deleted and settings are unchanged.
+    public async Task<LoginResult> CompleteLoginAsync(
+        PendingLogin pending,
+        ProviderAccount? existing,
+        string label,
+        string? emailHint,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var exitCode = await pending.Session.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+            var credentialsPath = Path.Combine(pending.StagingDirectory, ".credentials.json");
+            if (exitCode != 0 || !File.Exists(credentialsPath))
+            {
+                return LoginResult.Failed(DescribeFailedLogin(pending.Session.Output));
+            }
+
+            var identity = await TryFetchIdentityAsync(credentialsPath, cancellationToken).ConfigureAwait(false);
+            if (identity is null || string.IsNullOrWhiteSpace(identity.Uuid))
+            {
+                return LoginResult.Failed("The sign-in finished, but the app could not confirm which account it was. Nothing was saved. Try again.");
+            }
+
+            if (ValidateLogin(_settingsService.Load(), existing?.Id, identity, emailHint) is { } rejection)
+            {
+                _logService.Warning("Anthropic", $"Rejected a Claude sign-in as {identity.Email}: {rejection}");
+                return LoginResult.Failed(rejection);
+            }
+
+            var account = existing is null
+                ? CommitNewAccount(pending.StagingDirectory, label, identity)
+                : CommitRelogin(existing, pending.StagingDirectory, identity);
+            if (account is null)
+            {
+                return LoginResult.Failed("The sign-in worked, but its login files could not be saved. Nothing was changed. Try again.");
+            }
+
+            await EnsureIdentityBlockAsync(account.ConfigDir, identity, cancellationToken).ConfigureAwait(false);
+            return LoginResult.Successful(identity.Email, account, identity);
+        }
+        finally
+        {
+            pending.Session.Dispose();
+            DiscardStaging(pending.StagingDirectory);
+        }
+    }
+
+    public void CancelLogin(PendingLogin pending)
+    {
+        pending.Session.Dispose();
+        DiscardStaging(pending.StagingDirectory);
+    }
+
+    // Null when the login can be saved; otherwise the reason it cannot, written for the user.
+    internal static string? ValidateLogin(AppSettings settings, string? accountId, AccountIdentity identity, string? emailHint)
+    {
+        var expectedEmail = emailHint?.Trim();
+        if (!string.IsNullOrWhiteSpace(expectedEmail) &&
+            !string.IsNullOrWhiteSpace(identity.Email) &&
+            !string.Equals(expectedEmail, identity.Email, StringComparison.OrdinalIgnoreCase))
+        {
+            return $"You signed in as {identity.Email}, not {expectedEmail}. Nothing was saved. " +
+                $"Start again and choose {expectedEmail} on the sign-in page.";
+        }
+
+        var duplicate = settings.GetAccounts(KnownProviders.Anthropic).FirstOrDefault(account =>
+            !account.IsDefault &&
+            !string.Equals(account.Id, accountId, StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrWhiteSpace(account.AccountUuid) &&
+            string.Equals(account.AccountUuid, identity.Uuid, StringComparison.OrdinalIgnoreCase));
+        return duplicate is null
+            ? null
+            : $"You signed in as {identity.Email}, which is already saved as '{duplicate.Label}'. Nothing was saved. " +
+                "Start again and choose a different account on the sign-in page.";
+    }
+
+    private ProviderAccount? CommitNewAccount(string stagingDirectory, string label, AccountIdentity identity)
+    {
+        var slug = BuildSlug(label);
+        var configDir = Path.Combine(AccountsRootDirectory, slug);
+        try
+        {
+            Directory.Move(stagingDirectory, configDir);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            _logService.Error("Anthropic", $"Could not save the new Claude login folder: {ex.Message}");
+            return null;
+        }
+
+        var account = new ProviderAccount
+        {
+            Id = $"anthropic-{slug}",
+            ProviderName = KnownProviders.Anthropic,
+            Label = label.Trim(),
+            Enabled = true,
+            IsDefault = false,
+            ConfigDir = configDir,
+            Email = identity.Email,
+            AccountUuid = identity.Uuid
+        };
+        _settingsService.Update(settings => settings.ProviderAccounts.Add(account));
+        _logService.Info("Anthropic", $"Added Claude account '{account.Label}' signed in as {identity.Email}.");
+        return account;
+    }
+
+    // Token and identity block always move together; see docs/claude-accounts.md.
+    private ProviderAccount? CommitRelogin(ProviderAccount account, string stagingDirectory, AccountIdentity identity)
     {
         if (string.IsNullOrWhiteSpace(account.ConfigDir))
         {
-            return LoginResult.Failed("This account has no config directory.");
+            return null;
         }
 
-        var claudePath = CommandPathResolver.FindCommandPath("claude");
-        if (string.IsNullOrWhiteSpace(claudePath))
+        if (!ClaudeIdentityFiles.TryCopyCredentials(
+                Path.Combine(stagingDirectory, ".credentials.json"),
+                Path.Combine(account.ConfigDir, ".credentials.json"),
+                out var error))
         {
-            return LoginResult.Failed("The claude CLI was not found on PATH. Install Claude Code first.");
+            _logService.Error("Anthropic", $"Could not save the new login for '{account.Label}': {error}");
+            return null;
         }
 
-        Directory.CreateDirectory(account.ConfigDir);
-        var credentialsPath = Path.Combine(account.ConfigDir, ".credentials.json");
-        var baselineWriteTime = File.Exists(credentialsPath)
-            ? File.GetLastWriteTimeUtc(credentialsPath)
-            : (DateTime?)null;
+        var stagedClaudeJson = ClaudeIdentityFiles.ClaudeJsonPathFor(stagingDirectory);
+        if (string.Equals(ClaudeIdentityFiles.TryReadOAuthAccountUuid(stagedClaudeJson), identity.Uuid, StringComparison.OrdinalIgnoreCase))
+        {
+            ClaudeIdentityFiles.TryCopyOAuthAccountBlock(stagedClaudeJson, ClaudeIdentityFiles.ClaudeJsonPathFor(account.ConfigDir), out _);
+        }
+
+        PersistLoginIdentity(account, identity);
+        return account;
+    }
+
+    // The CLI usually writes the oauthAccount block itself. When it does not, rebuild it from the
+    // profile endpoint so `/status` in that folder names the account whose token it holds.
+    private async Task EnsureIdentityBlockAsync(string configDir, AccountIdentity identity, CancellationToken cancellationToken)
+    {
+        var claudeJsonPath = ClaudeIdentityFiles.ClaudeJsonPathFor(configDir);
+        if (string.Equals(ClaudeIdentityFiles.TryReadOAuthAccountUuid(claudeJsonPath), identity.Uuid, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var block = await TryFetchOAuthAccountBlockAsync(Path.Combine(configDir, ".credentials.json"), cancellationToken).ConfigureAwait(false);
+        if (block is not null)
+        {
+            ClaudeIdentityFiles.TryWriteOAuthAccountBlock(claudeJsonPath, block, out _);
+        }
+    }
+
+    // Deletes a staging folder, and only a staging folder under this service's accounts root.
+    private void DiscardStaging(string stagingDirectory)
+    {
+        var root = Path.GetFullPath(AccountsRootDirectory).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var full = Path.GetFullPath(stagingDirectory);
+        if (!full.StartsWith(root, StringComparison.OrdinalIgnoreCase) ||
+            !Path.GetFileName(full).StartsWith(StagingPrefix, StringComparison.Ordinal) ||
+            !Directory.Exists(full))
+        {
+            return;
+        }
 
         try
         {
-            // /k keeps the window open so the user can see errors; the env var has to be set
-            // inline because UseShellExecute ignores ProcessStartInfo.Environment. If this CLI
-            // version doesn't auto-run /login as a prompt argument the window stays open and
-            // the user can type /login themselves.
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = $"/k \"set CLAUDE_CONFIG_DIR={account.ConfigDir}&& \"{claudePath}\" /login\"",
-                UseShellExecute = true
-            };
-            Process.Start(startInfo);
+            Directory.Delete(full, recursive: true);
         }
-        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            return LoginResult.Failed($"Could not launch the claude CLI: {ex.Message}");
+            _logService.Warning("Anthropic", $"Could not delete the temporary login folder {full}: {ex.Message}");
         }
+    }
 
-        var deadline = DateTimeOffset.UtcNow + LoginTimeout;
-        while (DateTimeOffset.UtcNow < deadline)
-        {
-            await Task.Delay(LoginPollInterval, cancellationToken).ConfigureAwait(false);
-
-            if (!File.Exists(credentialsPath))
-            {
-                continue;
-            }
-
-            var writeTime = File.GetLastWriteTimeUtc(credentialsPath);
-            if (baselineWriteTime is null || writeTime > baselineWriteTime)
-            {
-                var identity = await TryFetchIdentityAsync(credentialsPath, cancellationToken).ConfigureAwait(false);
-                PersistLoginIdentity(account, identity);
-                return LoginResult.Successful(identity?.Email ?? string.Empty);
-            }
-        }
-
-        return LoginResult.Failed(
-            "Timed out waiting for the login to complete. Finish /login in the terminal window and use 'Log in again' to retry detection.");
+    private static string DescribeFailedLogin(string output)
+    {
+        // The CLI's "Paste code here if prompted >" prompt has no line break, so an error printed
+        // after the code arrives shares its line. Strip the prompt, and skip the link line.
+        const string prompt = "Paste code here if prompted >";
+        var lastLine = output
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(line => line.StartsWith(prompt, StringComparison.OrdinalIgnoreCase) ? line[prompt.Length..].Trim() : line)
+            .LastOrDefault(line => line.Length > 0 && !line.Contains("/oauth/authorize", StringComparison.OrdinalIgnoreCase));
+        return string.IsNullOrWhiteSpace(lastLine)
+            ? "The sign-in did not finish. Nothing was saved. Check the code and try again."
+            : $"The sign-in did not finish ({lastLine}). Nothing was saved. Check the code and try again.";
     }
 
     internal static string? TryReadAccessToken(string credentialsPath)
@@ -404,9 +549,11 @@ public sealed class AnthropicAccountManagerService
 
     public sealed record AccountIdentity(string Email, string Uuid);
 
-    public sealed record LoginResult(bool Succeeded, string Message)
+    public sealed record PendingLogin(ClaudeLoginSession Session, string StagingDirectory);
+
+    public sealed record LoginResult(bool Succeeded, string Message, ProviderAccount? Account = null, AccountIdentity? Identity = null)
     {
-        public static LoginResult Successful(string email) => new(true, email);
+        public static LoginResult Successful(string email, ProviderAccount account, AccountIdentity identity) => new(true, email, account, identity);
 
         public static LoginResult Failed(string message) => new(false, message);
     }

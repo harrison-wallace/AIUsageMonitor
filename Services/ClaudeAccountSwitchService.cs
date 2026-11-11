@@ -347,6 +347,37 @@ public sealed class ClaudeAccountSwitchService
         return string.Equals(homeBlockUuid, accountUuid, StringComparison.OrdinalIgnoreCase);
     }
 
+    // Saves the current ~/.claude login as its own account when no saved account holds it yet.
+    // The first saved account hides the plain ~/.claude card (AppSettings.GetMonitoringAccounts),
+    // so without this the main login would stop being monitored. Pass only a verified identity.
+    public bool AdoptSlotLoginIfUnsaved(AnthropicAccountManagerService.AccountIdentity identity)
+    {
+        var defaultCredentialsPath = Path.Combine(_homeDirectory, ".claude", ".credentials.json");
+        if (string.IsNullOrWhiteSpace(identity.Uuid) || !File.Exists(defaultCredentialsPath))
+        {
+            return false;
+        }
+
+        bool IsSaved(AppSettings current) => current.GetAccounts(KnownProviders.Anthropic).Any(account =>
+            !account.IsDefault &&
+            string.Equals(account.AccountUuid, identity.Uuid, StringComparison.OrdinalIgnoreCase));
+
+        var settings = _settingsService.Load();
+        if (IsSaved(settings))
+        {
+            return false;
+        }
+
+        AdoptOutgoingIdentity(settings, identity, defaultCredentialsPath);
+        var adopted = IsSaved(_settingsService.Load());
+        if (adopted)
+        {
+            _logService.Info("Anthropic", $"Saved the current ~/.claude login ({identity.Email}) as its own account so it stays monitored.");
+        }
+
+        return adopted;
+    }
+
     private void AdoptOutgoingIdentity(
         AppSettings settings,
         AnthropicAccountManagerService.AccountIdentity identity,
