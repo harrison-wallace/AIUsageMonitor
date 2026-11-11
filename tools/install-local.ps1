@@ -62,6 +62,18 @@ Get-ChildItem -LiteralPath $staging -File |
     Copy-Item -Destination $InstallDir -Force
 "INSTALLED $version -> $exe"
 
+# Start-menu shortcut. The working directory must be the install folder: AppSettingsService
+# falls back to the current directory when no settings file sits next to the exe.
+$shortcutPath = Join-Path ([Environment]::GetFolderPath('Programs')) 'AI Usage Monitor.lnk'
+$shell = New-Object -ComObject WScript.Shell
+$shortcut = $shell.CreateShortcut($shortcutPath)
+$shortcut.TargetPath = $exe
+$shortcut.WorkingDirectory = $InstallDir
+$shortcut.IconLocation = "$exe,0"
+$shortcut.Description = 'AI Usage Monitor'
+$shortcut.Save()
+"SHORTCUT $shortcutPath"
+
 if ($NoStart) { return }
 
 # 3. Start it outside the caller's Windows job. Start-Process can leave the app in a kill-on-close

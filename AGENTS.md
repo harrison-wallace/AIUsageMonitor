@@ -114,7 +114,9 @@ excluded from its compile items.
 
 - `tools\install-local.ps1` publishes a self-contained single-file build, stops the installed
   copy (matched by full path), copies the new exe to `%LOCALAPPDATA%\Programs\AIUsageMonitor`,
-  and starts it detached from the calling shell. A failed build leaves the installed copy
+  writes the "AI Usage Monitor" Start-menu shortcut, and starts it detached from the calling shell.
+  Start with Windows is on. The app owns that Run key and rewrites it from
+  `AutoRunAtLoginEnabled` when Settings is saved, so change the setting, not only the key. A failed build leaves the installed copy
   running. The build is not code-signed.
 - After a task that changes app code, and after the build and tests pass, run
   `install-local.ps1` so Harrison runs the latest build. Report the `INSTALLED` and `STARTED`

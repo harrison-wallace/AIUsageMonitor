@@ -24,7 +24,8 @@ which change gets which increment.
 ### Added
 
 - `tools/install-local.ps1` builds the app, replaces the installed copy in
-  `%LOCALAPPDATA%\Programs\AIUsageMonitor`, and starts it. Settings and saved accounts stay.
+  `%LOCALAPPDATA%\Programs\AIUsageMonitor`, adds an "AI Usage Monitor" Start-menu shortcut, and
+  starts it. Settings and saved accounts stay.
 
 ### Removed
 
