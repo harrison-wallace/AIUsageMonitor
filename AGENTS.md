@@ -3,7 +3,9 @@
 AIUsageMonitor is a Windows tray app that shows remaining AI subscription usage for Anthropic,
 OpenAI and Codex, Antigravity, Gemini, and Cursor. This repo is Harrison's personal copy. It
 started as a fork of `SethRobinson/AIUsageMonitor` at V1.21 (2026-11-01). It is for Harrison's
-own use on this PC. It does not track upstream, and changes do not go back upstream.
+own use on this PC. It does not track upstream, and changes do not go back upstream. The app
+is rebranded "AI Usage Monitor". Keep the credit to Seth A. Robinson in `README.md`, the About
+window, and `LICENSE`.
 
 `CLAUDE.md` is only `@AGENTS.md`. This file is the one source of agent rules. If a rule is not
 clear, ask Harrison before you continue.
@@ -25,7 +27,7 @@ clear, ask Harrison before you continue.
 - **Security first.** Never write a credential, a token, or account data into the repository.
 - **Do not preserve backward compatibility** unless Harrison asks for it. There is one
   exception: the installed app must still load the existing `monitor.settings.json` and the
-  saved accounts under `%LOCALAPPDATA%\SethsAIUsageMonitor`. A change that breaks them needs a
+  saved accounts under `%LOCALAPPDATA%\AIUsageMonitor`. A change that breaks them needs a
   migration in `AppSettings.Normalize()` and a MAJOR version bump.
 - **Phase board.** If `docs/plans/NOW.md` exists, read it first, then only the phase doc it
   names. `docs/plans/` stays out of git.
@@ -63,6 +65,10 @@ Agents **are allowed and expected** to commit and `git push origin main` in this
   times out`. Not: `update`, `fixes`, or `wip`.
 - Stage only the files for this change. Do not `git add .` when unrelated files are dirty.
 - Before each commit, review the staged diff for secrets. Section 6 lists what counts.
+- The agent shell has no terminal for Git Credential Manager, so a plain `git push` fails. Push
+  with the `gh` login for that one command:
+  `git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin main`.
+  Do not change git config.
 
 ---
 
@@ -86,6 +92,14 @@ excluded from its compile items.
 
 - Run the tests that cover the change. Run the full test project once at the end when shared
   code changed: the aggregator, settings, models, or a collector base.
+- In an agent shell, the 3 WebView2 tests in `ClaudeBillingBrowserTests` fail with
+  `Invalid window handle. (0x80070578)`, with or without the sandbox. They need a normal
+  desktop session. This failure is known (2026-11-11, V1.21.0). Report it, and ask Harrison to run
+  that class from his own terminal when billing browser code changes.
+- After a new SDK install, refresh `PATH` in the shell first:
+  `$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')`.
+- `install-local.ps1` writes to `%LOCALAPPDATA%` and starts a GUI process. Run it outside the
+  agent sandbox.
 - Use fake diagnostics and tests by default. Live collectors run local CLIs, use saved
   credentials, call provider APIs, and can use a small amount of quota. Run a live check only
   when Harrison asks: `dotnet run --project .\tools\AIUsageMonitor.Diagnostics -- refresh --live
@@ -145,11 +159,11 @@ sections.
   `auth.json`, a WebView2 profile, or `monitor.settings.json` protected fields. Never commit
   them. Tests use fake home directories and fake settings.
 - **Real login files.** Do not run code that writes to the real `~/.claude`, `~/.codex`, or
-  `%LOCALAPPDATA%\SethsAIUsageMonitor` during development. Account switching, token refresh, and
+  `%LOCALAPPDATA%\AIUsageMonitor` during development. Account switching, token refresh, and
   adoption change the CLI login that Harrison uses for work.
-- **Rename of app data.** Do not rename `SethsAIUsageMonitor` in data paths or in
-  `StartupEntryName`. Saved accounts, billing profiles, and the Run key use these names. A
-  rebrand needs a migration that moves them first.
+- **Rename of app data.** Do not rename `AIUsageMonitor` in data paths or in `StartupEntryName`.
+  Saved accounts, billing profiles, and the Run key use these names. Another rename needs a
+  migration that moves them first.
 - **Desktop control.** Do not take desktop screenshots or send input to the desktop unless the
   current request allows it. The app's own `--screenshot` modes render offscreen and are always
   allowed.

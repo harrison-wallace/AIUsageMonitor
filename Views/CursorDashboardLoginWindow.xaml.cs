@@ -28,7 +28,7 @@ public partial class CursorDashboardLoginWindow : Window
         {
             var userDataFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "SethsAIUsageMonitor",
+                "AIUsageMonitor",
                 "CursorWebView2");
             Directory.CreateDirectory(userDataFolder);
 
@@ -79,7 +79,7 @@ public partial class CursorDashboardLoginWindow : Window
             settings.CursorDashboardCookiesCapturedAt = DateTimeOffset.Now;
             _settingsService.Save(settings);
 
-            StatusTextBlock.Text = "Cursor dashboard login saved. You can close this window and refresh Seth's AI Usage Monitor.";
+            StatusTextBlock.Text = "Cursor dashboard login saved. You can close this window and refresh AI Usage Monitor.";
             _logService.Info("Cursor", "Cursor dashboard login cookies saved for personal usage scraping.");
         }
         catch (Exception ex) when (ex is FormatException or CryptographicException or IOException or UnauthorizedAccessException or InvalidOperationException)

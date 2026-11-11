@@ -158,7 +158,7 @@ public partial class SettingsWindow : Window
         {
             KnownProviders.Anthropic => new ProviderSetupInfo(
                 "Anthropic Setup",
-                "Install Claude Code, run claude, and sign in. Seth's AI Usage Monitor reads local Claude Code OAuth and status-line quota data when available.",
+                "Install Claude Code, run claude, and sign in. AI Usage Monitor reads local Claude Code OAuth and status-line quota data when available.",
                 "Open Claude Code setup",
                 "https://docs.claude.com/en/docs/claude-code/setup"),
             KnownProviders.OpenAI => new ProviderSetupInfo(
@@ -169,13 +169,13 @@ public partial class SettingsWindow : Window
                 OpenCodex),
             KnownProviders.Antigravity => new ProviderSetupInfo(
                 "Antigravity Setup",
-                "Run Antigravity and sign in. Seth's AI Usage Monitor reads the local Antigravity language server quota while Antigravity is running.",
+                "Run Antigravity and sign in. AI Usage Monitor reads the local Antigravity language server quota while Antigravity is running.",
                 "Open Antigravity",
                 AntigravityLauncherService.DownloadUrl,
                 OpenAntigravity),
             KnownProviders.Gemini => new ProviderSetupInfo(
                 "Gemini Setup",
-                "Install Gemini CLI, run gemini, and sign in. Seth's AI Usage Monitor reads Gemini CLI credentials, Code Assist quota, quota status exports, and local session usage.",
+                "Install Gemini CLI, run gemini, and sign in. AI Usage Monitor reads Gemini CLI credentials, Code Assist quota, quota status exports, and local session usage.",
                 "Open Gemini CLI setup",
                 "https://google-gemini.github.io/gemini-cli/docs/get-started/"),
             _ => null

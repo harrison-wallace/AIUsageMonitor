@@ -1,7 +1,7 @@
 <Window x:Class="AIUsageMonitor.Views.LogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Seth's AI Usage Monitor Logs"
+        Title="AI Usage Monitor Logs"
         Width="760"
         Height="460"
         WindowStartupLocation="CenterOwner"

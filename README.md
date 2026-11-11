@@ -1,4 +1,6 @@
-# Seth's AI Usage Monitor
+# AI Usage Monitor
+
+Based on [Seth's AI Usage Monitor](https://github.com/SethRobinson/AIUsageMonitor) by Seth A. Robinson (MIT). This copy is rebranded and maintained for personal use.
 
 The overlay changes content density as you resize it instead of simply shrinking the same layout.
 
@@ -69,8 +71,8 @@ Claude billing authentication, account isolation, and refresh behavior: [Claude 
 
 ## AI Disclosure
 
-This project was developed with significant assistance from AI tools.  I mean, you can still blame me (Seth) for bugs, but I just wanted to mention it.
+This project was developed with significant assistance from AI tools, both upstream and in this copy.
 
 ## Credits
 
-Created by Seth A. Robinson - [Homepage](https://www.rtsoft.com/) | [Blog](https://www.codedojo.com/) | [Twitter](https://twitter.com/rtsoft) | [Bluesky](https://bsky.app/profile/rtsoft.com) | [Mastodon](https://mastodon.gamedev.place/@rtsoft)
+Original app created by Seth A. Robinson - [GitHub](https://github.com/SethRobinson/AIUsageMonitor) | [Homepage](https://www.rtsoft.com/) | [Blog](https://www.codedojo.com/) | [Twitter](https://twitter.com/rtsoft) | [Bluesky](https://bsky.app/profile/rtsoft.com) | [Mastodon](https://mastodon.gamedev.place/@rtsoft)

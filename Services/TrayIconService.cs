@@ -45,7 +45,7 @@ public sealed class TrayIconService : IDisposable
         EnsureClaudeStatusExporterIfEnabled();
 
         var menu = new WinForms.ContextMenuStrip();
-        menu.Items.Add("Show Seth's AI Usage Monitor", null, (_, _) => Dispatch(ShowOverlay));
+        menu.Items.Add("Show AI Usage Monitor", null, (_, _) => Dispatch(ShowOverlay));
         menu.Items.Add("Refresh Now", null, (_, _) => Dispatch(() => _ = ManualRefreshAsync()));
         menu.Items.Add("Settings", null, (_, _) => Dispatch(ShowSettings));
         menu.Items.Add("Logs", null, (_, _) => Dispatch(ShowLogs));

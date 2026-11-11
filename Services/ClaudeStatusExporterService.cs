@@ -45,7 +45,7 @@ public sealed class ClaudeStatusExporterService
         if (statusLine is not null &&
             !alreadyConfigured)
         {
-            _logService.Warning("Anthropic", "Claude Code already has a custom statusLine. Seth's AI Usage Monitor did not overwrite it.");
+            _logService.Warning("Anthropic", "Claude Code already has a custom statusLine. AI Usage Monitor did not overwrite it.");
             return false;
         }
 

@@ -10,7 +10,7 @@ using AIUsageMonitor.Models;
 namespace AIUsageMonitor.Services;
 
 // Creates and maintains managed Claude accounts: each one is a dedicated CLAUDE_CONFIG_DIR
-// under %LOCALAPPDATA%\SethsAIUsageMonitor\accounts\anthropic that the official claude CLI
+// under %LOCALAPPDATA%\AIUsageMonitor\accounts\anthropic that the official claude CLI
 // logs into once; afterwards the app reads and refreshes that dir's .credentials.json itself.
 public sealed class AnthropicAccountManagerService
 {
@@ -43,7 +43,7 @@ public sealed class AnthropicAccountManagerService
 
     public static string DefaultAccountsRootDirectory => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "SethsAIUsageMonitor",
+        "AIUsageMonitor",
         "accounts",
         "anthropic");
 

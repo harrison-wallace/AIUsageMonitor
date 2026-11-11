@@ -1,7 +1,7 @@
 <Window x:Class="AIUsageMonitor.Views.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About Seth's AI Usage Monitor"
+        Title="About AI Usage Monitor"
         Width="540"
         Height="430"
         MinWidth="500"
@@ -38,7 +38,7 @@
                         BorderThickness="1"
                         CornerRadius="8">
                     <StackPanel>
-                        <TextBlock Text="Created by Seth A. Robinson"
+                        <TextBlock Text="Based on AIUsageMonitor by Seth A. Robinson"
                                    Foreground="#F3F4F6"
                                    FontSize="16"
                                    FontWeight="SemiBold" />

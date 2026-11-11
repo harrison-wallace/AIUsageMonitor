@@ -37,7 +37,7 @@ public sealed class ClaudeBillingService : IClaudeBillingReader
         _browser = browser ?? new ClaudeBillingBrowser();
         _profileRoot = Path.GetFullPath(profileRoot ?? Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "SethsAIUsageMonitor", "ClaudeBillingWebView2"));
+            "AIUsageMonitor", "ClaudeBillingWebView2"));
     }
 
     public string GetProfileDirectory(string connectionId)

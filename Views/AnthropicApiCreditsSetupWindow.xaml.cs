@@ -54,7 +54,7 @@ public partial class AnthropicApiCreditsSetupWindow : Window
 
             var userDataFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "SethsAIUsageMonitor",
+                "AIUsageMonitor",
                 "AnthropicConsoleWebView2");
             Directory.CreateDirectory(userDataFolder);
 

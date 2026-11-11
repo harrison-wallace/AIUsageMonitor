@@ -17,7 +17,7 @@ public sealed class OpenAiAccountManagerService
         _settings = settings;
         _client = client ?? new CodexAccountClient();
         AccountsRootDirectory = Path.GetFullPath(accountsRootDirectory ?? Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SethsAIUsageMonitor", "accounts", "openai"));
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AIUsageMonitor", "accounts", "openai"));
     }
 
     public async Task<ProviderAccount> LoginAsync(string label, string? accountId, Action<Uri> openBrowser, CancellationToken cancellationToken)

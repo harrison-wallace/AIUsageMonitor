@@ -7,7 +7,7 @@ Build the app and install it on this PC. This is the whole release flow for this
    A failed build stops here, so the installed copy keeps running.
 2. Stops the installed copy only (matched by its full path), then copies the new exe in.
    Settings, logs, and saved accounts are not touched: monitor.settings.json sits next to the
-   exe, and accounts live under %LOCALAPPDATA%\SethsAIUsageMonitor.
+   exe, and accounts live under %LOCALAPPDATA%\AIUsageMonitor.
 3. Starts the installed exe, detached from the calling shell's Windows job, so an agent's
    command session cannot take the tray app down when it closes.
 
@@ -58,7 +58,7 @@ foreach ($process in $running) {
 }
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 Get-ChildItem -LiteralPath $staging -File |
-    Where-Object { $_.Name -notin @('usage.fake.json', 'monitor.settings.json') -and $_.Extension -notin @('.pdb', '.jsonl', '.log') } |
+    Where-Object { $_.Name -notin @('usage.fake.json', 'monitor.settings.json') -and $_.Extension -notin @('.pdb', '.xml', '.jsonl', '.log') } |
     Copy-Item -Destination $InstallDir -Force
 "INSTALLED $version -> $exe"
 

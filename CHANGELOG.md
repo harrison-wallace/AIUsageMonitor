@@ -10,6 +10,12 @@ which change gets which increment.
 
 ### Changed
 
+- The app is rebranded "AI Usage Monitor". Window titles, the tray menu, and setup text drop
+  "Seth's". The About window and `README.md` credit Seth A. Robinson as the original author.
+- App data moves from `%LOCALAPPDATA%\SethsAIUsageMonitor` to `%LOCALAPPDATA%\AIUsageMonitor`, and the
+  start-with-Windows entry is now `AIUsageMonitor`. There is no migration: this PC had no data
+  in the old folder.
+- `upstream` is no longer a git remote.
 - Agent rules in `AGENTS.md` now describe this repo as a personal copy. Agents commit and push to
   `origin` `main`, use SemVer with this changelog, and install the build on this PC.
 - Claude account notes moved from `AGENTS.md` to `docs/claude-accounts.md`.

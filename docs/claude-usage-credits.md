@@ -4,7 +4,7 @@ Claude subscription usage credits fund extra usage after plan quotas are reached
 
 ## Connecting
 
-Open Settings > Anthropic > Accounts and choose **Connect usage credits** beside an account. Sign into that account on Claude in the embedded browser, then select **Connect**. Close Accounts and Settings to refresh the overlay. Each login has an isolated WebView2 profile under `%LOCALAPPDATA%\SethsAIUsageMonitor\ClaudeBillingWebView2`.
+Open Settings > Anthropic > Accounts and choose **Connect usage credits** beside an account. Sign into that account on Claude in the embedded browser, then select **Connect**. Close Accounts and Settings to refresh the overlay. Each login has an isolated WebView2 profile under `%LOCALAPPDATA%\AIUsageMonitor\ClaudeBillingWebView2`.
 
 Connection verifies `/api/oauth/profile` using that account's Claude Code credentials, compares its account UUID with `/api/account` on `claude.ai`, and requires the OAuth organization UUID in `/api/organizations`. It then reads `/api/organizations/{orgId}/prepaid/credits`. Labels and emails are never sufficient to authorize a match. No billing writes, purchases, or changes to extra-usage settings are performed.
 
