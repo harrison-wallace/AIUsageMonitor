@@ -76,6 +76,14 @@ $shortcut.Save()
 
 if ($NoStart) { return }
 
+# Session 0 is Windows' non-interactive service session. Agent shells can run there. An app
+# started there has no tray icon or window you can see, and the single-instance lock is per
+# session, so it would run beside the copy you start yourself and share its settings files.
+if ([System.Diagnostics.Process]::GetCurrentProcess().SessionId -eq 0) {
+    "NOT STARTED: this shell is in session 0 (non-interactive). Start AI Usage Monitor from the Start menu."
+    return
+}
+
 # 3. Start it outside the caller's Windows job. Start-Process can leave the app in a kill-on-close
 #    job, so it would close when an agent's command session ends.
 if (-not ('AIUsageMonitor.DetachedLauncher' -as [type])) {

@@ -119,8 +119,14 @@ excluded from its compile items.
   `AutoRunAtLoginEnabled` when Settings is saved, so change the setting, not only the key. A failed build leaves the installed copy
   running. The build is not code-signed.
 - After a task that changes app code, and after the build and tests pass, run
-  `install-local.ps1` so Harrison runs the latest build. Report the `INSTALLED` and `STARTED`
-  lines. The installed tray app is the one process that you leave running.
+  `install-local.ps1` so Harrison runs the latest build. Report the `INSTALLED` line and the
+  `STARTED` or `NOT STARTED` line.
+- **Agent shells can run in session 0** (non-interactive). An app started there is invisible: no
+  tray icon, no window. The single-instance mutex is per session, so it runs beside Harrison's
+  copy and writes the same settings and log files. `install-local.ps1` refuses to start the app
+  in session 0 and prints `NOT STARTED`; then tell Harrison to start it from the Start menu.
+  Check with `Get-Process AIUsageMonitor | Select Id, SessionId`. Found 2026-11-11: every earlier
+  agent restart had run invisibly in session 0.
 - Do not start the installed exe with plain `Start-Process`. The agent shell can hold it in a
   kill-on-close Windows job, and the app then closes with the session and no crash event.
 - `monitor.settings.json` and `monitor.log.jsonl` sit next to the installed exe. The install

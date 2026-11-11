@@ -8,62 +8,60 @@ which change gets which increment.
 
 ## [Unreleased]
 
+## [1.22.0] - 2026-11-11
+
 ### Added
 
 - GitHub Copilot: monthly premium requests, chat, and completions for the `gh` login, read from
   GitHub's Copilot user endpoint. One quota covers Copilot CLI and VS Code. Enable it in Settings.
+- The full-size overlay is one table: a group per provider, a row per account, and the same
+  columns for every account (Session, Week, Other limits, Credits, Status). **Active / All** hides
+  providers with no usage or no data, also in the compact and mini strips, and the choice is
+  saved. See `docs/adr/0001-overlay-account-table.md`.
+- A Claude sign-in window replaces the terminal login. It never opens a browser by itself: it
+  shows the link with **Copy link**, **Open in <your browser> private window**, and **Open in
+  browser**, then takes the code from the sign-in page. An optional email is filled in.
+- Bundled Inter and DM Mono fonts (SIL OFL 1.1, `THIRD_PARTY_NOTICES.md`).
 - `tools/install-local.ps1` builds the app, replaces the installed copy in
   `%LOCALAPPDATA%\Programs\AIUsageMonitor`, adds an "AI Usage Monitor" Start-menu shortcut, and
   starts it. Settings and saved accounts stay.
 
 ### Changed
 
-- The README is rewritten: badges, a Start here block, a providers table, and fresh screenshots.
-  The "What's new" list is gone; history is in this file.
-- Demo data and screenshots use generic names (Personal, Work, Research) and include Copilot.
-
-- Every dialog (Settings, Claude and OpenAI accounts, sign-in, logs, setup windows) uses the
-  VortexOne look: the same warm palette and dark buttons, fields, checkboxes, sliders, and
-  scrollbars. The default action button is off-white.
-- The bundled Inter and DM Mono fonts replace the system fonts (SIL OFL 1.1, `THIRD_PARTY_NOTICES.md`).
-- Usage bars fill with a gradient that warms from green to amber to salmon as more is used.
-- The account table is narrower: reset times are short ("4h", "Fable · 14h") with the full date in
-  a tooltip, the Credits column fits its content and disappears when no account has credits, and
-  status is an icon with its label in a tooltip. Compact cards use the short reset times too.
-
-- The full-size overlay is now one table: a group per provider, a row per account, and the same
-  columns for every account (Session, Week, Other limits, Credits, Status). **Active / All** hides
-  providers with no usage or no data, and the compact and mini strips follow the same choice.
-  See `docs/adr/0001-overlay-account-table.md`.
-- The overlay uses the VortexOne dark design language: a warm canvas, hairlines, tight corners,
-  and no shadows. Status uses Optimal, Good, Watch, and Needs attention, each with an icon and a
-  label. Balances are neutral text instead of amber.
-- README screenshots are regenerated, and the README shows the Claude sign-in window.
-
-- Adding a Claude account no longer opens a terminal or a browser by itself. A sign-in window shows the
-  link with **Copy link**, **Open in <your browser> private window**, and **Open in browser**, then takes
-  the code from the sign-in page. An optional email is filled in on the sign-in page.
-- A Claude sign-in is saved only after the app checks who signed in. A login as an account that is
-  already saved, or as a different email than the one given, is rejected and nothing is saved.
-  Before, a browser already signed in to claude.ai silently added a second copy of that account.
-- Adding the first saved Claude account also saves the current `claude` CLI login, so its card no
-  longer disappears.
-
-- Quota cards show the percent **used**, the same direction as Claude Code's `/usage`. Rows read
-  `33% used`, card headlines read `Anthropic - 33% used`, and bars fill as quota is used. The mini
-  strip shows only the number. Status colours still turn amber and red as quota runs out. Credit
-  balances still show the amount left. The Claude Code status line reads `5h 3% used`.
-
 - The app is rebranded "AI Usage Monitor". Window titles, the tray menu, and setup text drop
   "Seth's". The About window and `README.md` credit Seth A. Robinson as the original author.
-- App data moves from `%LOCALAPPDATA%\SethsAIUsageMonitor` to `%LOCALAPPDATA%\AIUsageMonitor`, and the
-  start-with-Windows entry is now `AIUsageMonitor`. There is no migration: this PC had no data
+- App data moves from `%LOCALAPPDATA%\SethsAIUsageMonitor` to `%LOCALAPPDATA%\AIUsageMonitor`, and
+  the start-with-Windows entry is now `AIUsageMonitor`. There is no migration: this PC had no data
   in the old folder.
-- `upstream` is no longer a git remote.
-- Agent rules in `AGENTS.md` now describe this repo as a personal copy. Agents commit and push to
-  `origin` `main`, use SemVer with this changelog, and install the build on this PC.
-- Claude account notes moved from `AGENTS.md` to `docs/claude-accounts.md`.
+- Usage shows percent **used**, the same direction as Claude Code's `/usage`, in the overlay and
+  in the Claude Code status line (`5h 3% used`). Credit balances still show the amount left.
+- The overlay and every dialog use the VortexOne dark design language: a warm palette, hairlines,
+  tight corners, no shadows, and dark buttons, fields, checkboxes, sliders, and scrollbars. The
+  default action button is off-white. Balances are neutral text instead of amber.
+- Status uses Optimal, Good, Watch, and Needs attention, each with its own icon shape. The table
+  shows the icon alone, with the label in a tooltip.
+- Usage bars fill with a gradient that warms from green to amber to salmon as more is used.
+- Reset times are short ("4h", "Fable · 14h") with the full date in a tooltip. The Credits column
+  fits its content and disappears when no shown account has credits.
+- Adding the first saved Claude account also saves the current `claude` CLI login, so its card no
+  longer disappears.
+- The README is rewritten in the ai-engineering style: badges, Start here, a providers table, and
+  fresh screenshots. The "What's new" list is gone; history is in this file. Demo data uses
+  generic names (Personal, Work, Research) and includes Copilot.
 - `VersionText` uses SemVer: `V1.21` becomes `V1.21.0`.
+- Agent rules in `AGENTS.md` describe this repo as a personal copy: agents commit and push to
+  `origin` `main`, use SemVer with this changelog, and install the build on this PC. `upstream` is
+  no longer a git remote. Claude account notes moved to `docs/claude-accounts.md`.
+
+### Fixed
+
+- A Claude sign-in in a browser already signed in to claude.ai silently added a second copy of
+  that account. A sign-in is now saved only after the app checks who signed in: a duplicate, or a
+  different email than the one given, is rejected and nothing is saved.
+- Copilot kept reading the old account after `gh auth switch`, until a 401 or a restart. The token
+  is now read on every refresh. A `gh auth token` call that timed out was left running.
+- `install-local.ps1` started the app in session 0 when an agent ran it, where it is invisible and
+  runs beside your own copy. It now prints `NOT STARTED` there instead.
 
 ### Removed
 

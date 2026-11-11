@@ -1,6 +1,6 @@
 # AI Usage Monitor
 
-![Version](https://img.shields.io/badge/version-1.21.0-f7f5f0?style=flat-square&labelColor=2b2622)
+![Version](https://img.shields.io/badge/version-1.22.0-f7f5f0?style=flat-square&labelColor=2b2622)
 ![Providers](https://img.shields.io/badge/providers-7-7fd1a8?style=flat-square&labelColor=2b2622)
 ![Platform](https://img.shields.io/badge/platform-Windows-4a8fe0?style=flat-square&labelColor=2b2622)
 ![.NET](https://img.shields.io/badge/.NET-10-9085e9?style=flat-square&labelColor=2b2622)
@@ -95,7 +95,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\install-local.ps1
 
 The script builds a self-contained exe, replaces the copy in
 `%LOCALAPPDATA%\Programs\AIUsageMonitor`, adds a Start menu shortcut, and starts it. A failed build
-leaves the running copy alone. The build is not code-signed. App data (saved accounts, website
+leaves the running copy alone. Run from a non-interactive shell (an agent in session 0), it
+installs but does not start the app; start it from the Start menu. The build is not code-signed. App data (saved accounts, website
 logins) is in `%LOCALAPPDATA%\AIUsageMonitor`.
 
 ## Develop
