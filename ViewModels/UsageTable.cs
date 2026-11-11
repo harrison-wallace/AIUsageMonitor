@@ -37,6 +37,17 @@ public sealed record UsageTableRow(
 public sealed record UsageTableGroup(string ProviderName, IReadOnlyList<UsageTableRow> Rows)
 {
     public string Eyebrow => ProviderName.ToUpperInvariant();
+
+    public ProviderLogos.Logo? ProviderLogo { get; } = ProviderLogos.For(ProviderName);
+
+    public Geometry? Logo => ProviderLogo?.Geometry;
+
+    public bool HasLogo => ProviderLogo is not null;
+
+    public MediaBrush AccentBrush => UsageBrushes.ProviderAccent(ProviderName);
+
+    // The logo replaces the provider name. A provider with no logo keeps the name.
+    public string EyebrowText => HasLogo ? string.Empty : Eyebrow;
 }
 
 // HasCredits is false when no shown row has a balance or a money cap; the column then collapses.

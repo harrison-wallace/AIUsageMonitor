@@ -28,6 +28,7 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
         IsUnavailable = usage.IsUnavailable;
         LastCheckedAt = usage.LastCheckedAt;
         AccentBrush = UsageBrushes.ProviderAccent(usage.Name);
+        ProviderLogo = ProviderLogos.For(ShortName);
         var highlightBalance = !usage.IsUnavailable;
         Windows = usage.Windows.Select(window => new UsageWindowDisplay(window, highlightBalance)).ToList();
 
@@ -84,6 +85,22 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
 
     public string ShortName { get; }
 
+    // The provider logo replaces the provider name on the overlay. The *LogoText properties are the
+    // names and summaries without that prefix. They equal the full text when there is no logo.
+    public ProviderLogos.Logo? ProviderLogo { get; }
+
+    public System.Windows.Media.Geometry? Logo => ProviderLogo?.Geometry;
+
+    public bool HasLogo => ProviderLogo is not null;
+
+    public string LogoToolTip => ProviderLogo?.Brand ?? ShortName;
+
+    public string NameLogoText => ProviderLogos.StripPrefix(ProviderLogo, Name);
+
+    public string CompactLogoText => ProviderLogos.StripPrefix(ProviderLogo, CompactSummaryText);
+
+    public string MiniLogoText => ProviderLogos.StripPrefix(ProviderLogo, MiniSummaryText);
+
     public string SourceProviderName { get; }
 
     public string ConstrainedShortName { get; }
@@ -106,6 +123,8 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SummaryText)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompactSummaryText)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MiniSummaryText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompactLogoText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MiniLogoText)));
             }
         }
     }

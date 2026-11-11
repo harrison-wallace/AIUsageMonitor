@@ -8,6 +8,12 @@ which change gets which increment.
 
 ## [Unreleased]
 
+### Changed
+
+- The overlay shows provider logos instead of provider names: in the table group headers, on the
+  cards, and in the compact and mini strips. Hover a logo for the provider name. Antigravity has
+  no logo yet and keeps its name.
+
 ## [1.22.0] - 2026-11-11
 
 ### Added

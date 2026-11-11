@@ -213,6 +213,10 @@ sections.
 - Fonts: Inter 400 and 500 and DM Mono 400 are WPF resources in `Assets/Fonts` (OFL, see
   `THIRD_PARTY_NOTICES.md`). `App`'s static constructor makes Inter the default for every window;
   it must touch `PackUriHelper` first, or the `pack://` URI throws before the app starts.
+- Provider logos (`ProviderLogos`, Simple Icons path data, CC0) replace the provider name on the
+  overlay, filled with the provider accent. `StripPrefix` removes the name from the text beside
+  the logo. A provider with no logo keeps its name. `SummaryText` and the other text properties
+  keep the full name for tooltips and tests.
 - Balance rows (`IsBalance`) stay out of headline quota percentages and use neutral text, not a
   status colour. A balance-only card or row has the status "Balance".
 

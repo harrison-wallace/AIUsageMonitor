@@ -556,14 +556,28 @@
                                                             VerticalAlignment="Center"
                                                             Background="{Binding AccentBrush}"
                                                             CornerRadius="2" />
-                                                    <TextBlock Grid.Column="1"
-                                                               Text="{Binding Name}"
-                                                               Margin="0,0,12,0"
-                                                               Foreground="#F7F5F0"
-                                                               FontSize="16"
-                                                               FontWeight="SemiBold"
-                                                               TextWrapping="Wrap"
-                                                               VerticalAlignment="Center" />
+                                                    <Grid Grid.Column="1" Margin="0,0,12,0" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Path Data="{Binding Logo}"
+                                                              Fill="{Binding AccentBrush}"
+                                                              Width="20"
+                                                              Height="20"
+                                                              Margin="0,0,8,0"
+                                                              VerticalAlignment="Center"
+                                                              Stretch="Uniform"
+                                                              ToolTip="{Binding LogoToolTip}"
+                                                              Visibility="{Binding HasLogo, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                        <TextBlock Grid.Column="1"
+                                                                   Text="{Binding NameLogoText}"
+                                                                   Foreground="#F7F5F0"
+                                                                   FontSize="16"
+                                                                   FontWeight="SemiBold"
+                                                                   TextWrapping="Wrap"
+                                                                   VerticalAlignment="Center" />
+                                                    </Grid>
                                                     <StackPanel Grid.Column="2"
                                                                 HorizontalAlignment="Right"
                                                                 VerticalAlignment="Top">
@@ -711,14 +725,28 @@
                                                         Margin="0,0,12,0"
                                                         Background="{Binding AccentBrush}"
                                                         CornerRadius="2" />
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding Name}"
-                                                           Margin="0,0,12,0"
-                                                           Foreground="#F7F5F0"
-                                                           FontSize="18"
-                                                           FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           VerticalAlignment="Center" />
+                                                <Grid Grid.Column="1" Margin="0,0,12,0" VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Path Data="{Binding Logo}"
+                                                          Fill="{Binding AccentBrush}"
+                                                          Width="22"
+                                                          Height="22"
+                                                          Margin="0,0,8,0"
+                                                          VerticalAlignment="Center"
+                                                          Stretch="Uniform"
+                                                          ToolTip="{Binding LogoToolTip}"
+                                                          Visibility="{Binding HasLogo, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding NameLogoText}"
+                                                               Foreground="#F7F5F0"
+                                                               FontSize="18"
+                                                               FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
                                                 <StackPanel Grid.Column="2"
                                                             HorizontalAlignment="Right">
                                                     <Border Padding="9,4"
@@ -831,12 +859,28 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding CompactSummaryText}"
-                                                           Foreground="#F7F5F0"
-                                                           FontSize="15"
-                                                           FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           VerticalAlignment="Center" />
+                                                <Grid VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Path Data="{Binding Logo}"
+                                                          Fill="{Binding AccentBrush}"
+                                                          Width="16"
+                                                          Height="16"
+                                                          Margin="0,0,8,0"
+                                                          VerticalAlignment="Center"
+                                                          Stretch="Uniform"
+                                                          ToolTip="{Binding LogoToolTip}"
+                                                          Visibility="{Binding HasLogo, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding CompactLogoText}"
+                                                               Foreground="#F7F5F0"
+                                                               FontSize="15"
+                                                               FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
                                                 <Border Grid.Column="1"
                                                         Margin="10,0,0,0"
                                                         Padding="7,3"
@@ -928,12 +972,28 @@
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0"
-                                                       Text="{Binding MiniSummaryText}"
-                                                       Foreground="#F7F5F0"
-                                                       FontSize="12"
-                                                       FontWeight="SemiBold"
-                                                       TextTrimming="CharacterEllipsis" />
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Path Data="{Binding Logo}"
+                                                      Fill="{Binding AccentBrush}"
+                                                      Width="12"
+                                                      Height="12"
+                                                      Margin="0,0,6,0"
+                                                      VerticalAlignment="Center"
+                                                      Stretch="Uniform"
+                                                      ToolTip="{Binding LogoToolTip}"
+                                                      Visibility="{Binding HasLogo, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding MiniLogoText}"
+                                                           Foreground="#F7F5F0"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
                                             <ItemsControl Grid.Row="1"
                                                           ItemsSource="{Binding Windows}">
                                                 <ItemsControl.ItemsPanel>
@@ -1005,11 +1065,28 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding MiniSummaryText}"
-                                                           Foreground="#F7F5F0"
-                                                           FontSize="12"
-                                                           FontWeight="SemiBold"
-                                                           TextTrimming="CharacterEllipsis" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Path Data="{Binding Logo}"
+                                                          Fill="{Binding AccentBrush}"
+                                                          Width="12"
+                                                          Height="12"
+                                                          Margin="0,0,6,0"
+                                                          VerticalAlignment="Center"
+                                                          Stretch="Uniform"
+                                                          ToolTip="{Binding LogoToolTip}"
+                                                          Visibility="{Binding HasLogo, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding MiniLogoText}"
+                                                               Foreground="#F7F5F0"
+                                                               FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
                                                 <TextBlock Grid.Column="1"
                                                            Margin="8,0,0,0"
                                                            Text="{Binding SecondaryBalanceText}"
