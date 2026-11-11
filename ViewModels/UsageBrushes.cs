@@ -17,6 +17,7 @@ internal static class UsageBrushes
     private static readonly MediaBrush AntigravityAccent = FrozenBrush("#D15E8C"); // cat-5
     private static readonly MediaBrush GeminiAccent = FrozenBrush("#4A8FE0"); // cat-1
     private static readonly MediaBrush CursorAccent = FrozenBrush("#9085E9"); // cat-7
+    private static readonly MediaBrush CopilotAccent = FrozenBrush("#4F9A2E"); // cat-6
     private static readonly MediaBrush DefaultAccent = FrozenBrush("#DAD2C1"); // cat-other
 
     public static MediaBrush ProviderAccent(string providerName)
@@ -41,6 +42,11 @@ internal static class UsageBrushes
         if (normalized.StartsWith("gemini"))
         {
             return GeminiAccent;
+        }
+
+        if (normalized.StartsWith("github copilot"))
+        {
+            return CopilotAccent;
         }
 
         return normalized.StartsWith("cursor") ? CursorAccent : DefaultAccent;

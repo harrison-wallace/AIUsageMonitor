@@ -139,8 +139,8 @@ internal static class ScreenshotService
             WindowStartupLocation = WindowStartupLocation.Manual
         };
         window.ShowSignInStepForScreenshot(
-            "Crypto",
-            "crypto@example.com",
+            "Research",
+            "research@example.com",
             "https://claude.com/cai/oauth/authorize?code=true&client_id=9d1c250a-e61b-44d9-88ed-5944d1962f5e&response_type=code&state=demo");
 
         try
@@ -267,7 +267,7 @@ internal static class ScreenshotService
         var tempDirectory = Path.Combine(Path.GetTempPath(), "AIUsageMonitor.OpenAiScreenshot", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempDirectory);
         var settings = new AppSettings { OpenAiUseSavedAccounts = true };
-        foreach (var label in new[] { "Seth", "Work" })
+        foreach (var label in new[] { "Personal", "Work" })
             settings.ProviderAccounts.Add(new ProviderAccount { Id = "openai-demo-" + label, ProviderName = KnownProviders.OpenAI, Label = label, Email = label.ToLowerInvariant() + "@example.com", ConfigDir = Path.Combine(tempDirectory, label) });
         var service = new AppSettingsService(tempDirectory);
         service.Save(settings);

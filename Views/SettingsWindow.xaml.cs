@@ -30,6 +30,7 @@ public partial class SettingsWindow : Window
         AntigravityProviderEnabledCheckBox.IsChecked = Settings.IsProviderEnabled(KnownProviders.Antigravity);
         GeminiProviderEnabledCheckBox.IsChecked = Settings.IsProviderEnabled(KnownProviders.Gemini);
         CursorProviderEnabledCheckBox.IsChecked = Settings.IsProviderEnabled(KnownProviders.Cursor);
+        CopilotProviderEnabledCheckBox.IsChecked = Settings.IsProviderEnabled(KnownProviders.GitHubCopilot);
         UpdateAnthropicApiCreditsSummary();
         UpdateCursorModeSummary();
         UpdateAnthropicAccountsSummary();
@@ -178,6 +179,11 @@ public partial class SettingsWindow : Window
                 "Install Gemini CLI, run gemini, and sign in. AI Usage Monitor reads Gemini CLI credentials, Code Assist quota, quota status exports, and local session usage.",
                 "Open Gemini CLI setup",
                 "https://google-gemini.github.io/gemini-cli/docs/get-started/"),
+            KnownProviders.GitHubCopilot => new ProviderSetupInfo(
+                "GitHub Copilot Setup",
+                "Install the GitHub CLI and run gh auth login with the GitHub account that has Copilot. AI Usage Monitor reads that login's monthly Copilot quotas (premium requests, chat, completions). They are shared by Copilot CLI, VS Code, and the other editors. GH_TOKEN or GITHUB_TOKEN is used instead when set.",
+                "Open GitHub CLI setup",
+                "https://cli.github.com/"),
             _ => null
         };
 
@@ -273,6 +279,7 @@ public partial class SettingsWindow : Window
         Settings.SetProviderEnabled(KnownProviders.Antigravity, AntigravityProviderEnabledCheckBox.IsChecked == true);
         Settings.SetProviderEnabled(KnownProviders.Gemini, GeminiProviderEnabledCheckBox.IsChecked == true);
         Settings.SetProviderEnabled(KnownProviders.Cursor, CursorProviderEnabledCheckBox.IsChecked == true);
+        Settings.SetProviderEnabled(KnownProviders.GitHubCopilot, CopilotProviderEnabledCheckBox.IsChecked == true);
         Settings.ClaudeStatusExporterEnabled = ClaudeStatusExporterCheckBox.IsChecked == true;
         Settings.AutoRunAtLoginEnabled = AutoRunAtLoginCheckBox.IsChecked == true;
         Settings.DiagnosticLoggingEnabled = DiagnosticLoggingCheckBox.IsChecked == true;

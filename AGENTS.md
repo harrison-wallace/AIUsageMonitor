@@ -144,8 +144,9 @@ sections.
   `VersionText`, dates the changelog block, and prints the commit and tag commands. Run those
   commands (section 3 allows this), push with `git push --follow-tags origin main`, then run
   `install-local.ps1`.
-- The README "What's new" list stops at V1.21, which is upstream history. Do not extend it.
-  New history goes in `CHANGELOG.md` only.
+- History goes in `CHANGELOG.md` only. The README has no "What's new" list. It follows the
+  ai-engineering style: shield badges, Start here, short sections, plain English. Keep the badges
+  (version, provider count) true when they change, and regenerate screenshots after a UI change.
 
 | Increment | When to use |
 | --- | --- |
@@ -219,6 +220,7 @@ Read the linked doc before you change the feature.
 | OpenAI saved accounts | [docs/openai-accounts.md](docs/openai-accounts.md) | Isolated Codex homes. Never read shared sessions or switch the normal Codex login. |
 | Claude usage credits and website billing | [docs/claude-usage-credits.md](docs/claude-usage-credits.md) | `spend.balance: null` never means zero. Billing reads go through the WebView2 browser, not `HttpClient`. |
 | Overlay account table | [docs/adr/0001-overlay-account-table.md](docs/adr/0001-overlay-account-table.md) | Full size only (`DisplayMode` Full); compact and mini stay cards. `UsageTableBuilder` groups cards by `SourceProviderName`, so a model-group card rejoins its account row. Active / All (`ShowUnusedProviders`, saved in settings) also filters `VisibleProviders` for the strips; when every row is unused, all show. The layout sweep measures the table in Full mode. |
+| GitHub Copilot | `Collectors\GitHubCopilotUsageCollector.cs` | Undocumented `api.github.com/copilot_internal/user`, read with the `gh` login (`COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, `GITHUB_TOKEN` first). One account quota covers Copilot CLI and every editor. An entitlement of 0 is "Not on this plan", and unlimited quotas are inactive rows. The token stays in memory. |
 | ChatGPT purchased credits | `Collectors\CodexCredits.cs` | A credit count, not dollars. Added only when the account holds credits. |
 | Claude subscription credits | `Collectors\ClaudeUsageCredits.cs` | Read `spend.balance`. Never derive it from `monthly_limit - used_credits`. |
 
@@ -226,7 +228,7 @@ Read the linked doc before you change the feature.
 
 Screenshots render offscreen from fake data. They never read real settings or credentials.
 
-- Overlay: `dotnet run --project .\AIUsageMonitor.csproj -- --screenshot .\docs\screenshot-full.png --screenshot-size 1440x740`. Use `1440x136` for `screenshot-compact.png` and `1440x60` for `screenshot-mini-strip.png`. Then copy `screenshot-full.png` to `screenshot.png`.
+- Overlay: `dotnet run --project .\AIUsageMonitor.csproj -- --screenshot .\docs\screenshot-full.png --screenshot-size 1440x800`. Use `1440x136` for `screenshot-compact.png` and `1440x60` for `screenshot-mini-strip.png`. Then copy `screenshot-full.png` to `screenshot.png`.
 - Settings: `-- --screenshot-settings .\docs\screenshot-settings.png`
 - Claude accounts: `-- --screenshot-accounts .\docs\screenshot-accounts.png`
 - OpenAI accounts: `-- --screenshot-openai-accounts .\docs\screenshot-openai-accounts.png`

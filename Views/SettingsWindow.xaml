@@ -319,6 +319,37 @@
                                                     Click="CursorSetupButtonOnClick" />
                                         </Grid>
                                     </Border>
+
+                                    <Border Padding="12"
+                                            BorderBrush="#423C38"
+                                            BorderThickness="0,1,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <CheckBox x:Name="CopilotProviderEnabledCheckBox"
+                                                          Content="GitHub Copilot"
+                                                          Foreground="#DAD2C1"
+                                                          FontSize="13"
+                                                          FontWeight="SemiBold" />
+                                                <TextBlock Margin="24,4,0,0"
+                                                           Text="Monthly premium request, chat, and completion quotas for your gh login. Covers Copilot CLI and VS Code."
+                                                           Foreground="#AEA69C"
+                                                           FontSize="12"
+                                                           TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1"
+                                                    Width="82"
+                                                    Height="30"
+                                                    Margin="12,0,0,0"
+                                                    VerticalAlignment="Top"
+                                                    Content="Setup"
+                                                    Tag="GitHub Copilot"
+                                                    Click="ProviderSetupButtonOnClick" />
+                                        </Grid>
+                                    </Border>
                             </StackPanel>
                         </Border>
                     </StackPanel>

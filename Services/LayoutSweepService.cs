@@ -125,17 +125,17 @@ internal static class LayoutSweepService
             ["three-mixed"] = CreateMixedViewModel(),
             ["multiple-accounts"] = CreateViewModel(
             [
-                CreateAccountProvider("Anthropic - Seth", "Seth", fable: true),
+                CreateAccountProvider("Anthropic - Personal", "Personal", fable: true),
                 CreateAccountProvider("Anthropic - Work", "Work", fable: true),
-                CreateAccountProvider("OpenAI - Seth", "Seth"),
+                CreateAccountProvider("OpenAI - Personal", "Personal"),
                 CreateAccountProvider("OpenAI - Work", "Work")
             ]),
             ["five-normal"] = CreateViewModel(
             [
                 CreateProvider("Anthropic - Corp", 2),
                 CreateProvider("Anthropic - Corp Fable", 1),
-                CreateProvider("Anthropic - Seth", 2),
-                CreateProvider("Anthropic - Seth Fable", 1),
+                CreateProvider("Anthropic - Personal", 2),
+                CreateProvider("Anthropic - Personal Fable", 1),
                 CreateProvider("OpenAI", 1)
             ]),
             ["seven-dense"] = CreateViewModel(

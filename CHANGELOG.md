@@ -8,7 +8,19 @@ which change gets which increment.
 
 ## [Unreleased]
 
+### Added
+
+- GitHub Copilot: monthly premium requests, chat, and completions for the `gh` login, read from
+  GitHub's Copilot user endpoint. One quota covers Copilot CLI and VS Code. Enable it in Settings.
+- `tools/install-local.ps1` builds the app, replaces the installed copy in
+  `%LOCALAPPDATA%\Programs\AIUsageMonitor`, adds an "AI Usage Monitor" Start-menu shortcut, and
+  starts it. Settings and saved accounts stay.
+
 ### Changed
+
+- The README is rewritten: badges, a Start here block, a providers table, and fresh screenshots.
+  The "What's new" list is gone; history is in this file.
+- Demo data and screenshots use generic names (Personal, Work, Research) and include Copilot.
 
 - Every dialog (Settings, Claude and OpenAI accounts, sign-in, logs, setup windows) uses the
   VortexOne look: the same warm palette and dark buttons, fields, checkboxes, sliders, and
@@ -53,12 +65,6 @@ which change gets which increment.
 - Claude account notes moved from `AGENTS.md` to `docs/claude-accounts.md`.
 - `VersionText` uses SemVer: `V1.21` becomes `V1.21.0`.
 
-### Added
-
-- `tools/install-local.ps1` builds the app, replaces the installed copy in
-  `%LOCALAPPDATA%\Programs\AIUsageMonitor`, adds an "AI Usage Monitor" Start-menu shortcut, and
-  starts it. Settings and saved accounts stay.
-
 ### Removed
 
 - `package-release.bat`, `upload-to-rtsoft.bat`, and `tools/restart-app.ps1`. They signed the
@@ -66,5 +72,5 @@ which change gets which increment.
 
 ## [1.21.0] - 2026-11-01
 
-Fork point: upstream `SethRobinson/AIUsageMonitor` V1.21, commit `1608fc0`. The README
-"What's new" list has the upstream history before this point.
+Fork point: upstream `SethRobinson/AIUsageMonitor` V1.21, commit `1608fc0`. The history before
+this point is in that repository.

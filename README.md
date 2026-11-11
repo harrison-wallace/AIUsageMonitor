@@ -1,84 +1,151 @@
 # AI Usage Monitor
 
-Based on [Seth's AI Usage Monitor](https://github.com/SethRobinson/AIUsageMonitor) by Seth A. Robinson (MIT). This copy is rebranded and maintained for personal use.
+![Version](https://img.shields.io/badge/version-1.21.0-f7f5f0?style=flat-square&labelColor=2b2622)
+![Providers](https://img.shields.io/badge/providers-7-7fd1a8?style=flat-square&labelColor=2b2622)
+![Platform](https://img.shields.io/badge/platform-Windows-4a8fe0?style=flat-square&labelColor=2b2622)
+![.NET](https://img.shields.io/badge/.NET-10-9085e9?style=flat-square&labelColor=2b2622)
+![License](https://img.shields.io/badge/license-MIT-dad2c1?style=flat-square&labelColor=2b2622)
 
-At full size the overlay is one table: a group per provider, a row per account, and the same columns for every account, so you can compare accounts at a glance. **Active** hides providers you are not using (no usage this period, or no data). **All** shows them again. It uses the VortexOne dark design language: a warm canvas, the bundled Inter and DM Mono fonts, usage bars that warm in colour as they fill, and a status icon with its own shape for Optimal, Good, Watch, and Needs attention (hover it for the label).
+A Windows tray app that shows how much of each AI subscription you have used: Claude, OpenAI
+Codex, GitHub Copilot, Antigravity, Gemini, and Cursor, with several accounts per provider.
 
-![Full overlay: the account table](docs/screenshot-full.png)
+![The overlay: one table, a row per account](docs/screenshot-full.png)
 
-Make the window smaller and it changes to compact cards, then to a one-line strip. Both hide unused providers too.
+## Start here
+
+```
+install     tools\install-local.ps1      build, install to %LOCALAPPDATA%\Programs, start
+open        Start menu > AI Usage Monitor, or the tray icon
+accounts    Settings > Anthropic > Accounts · Settings > OpenAI > Accounts
+providers   Settings > tick a provider > Setup explains its login
+update      run tools\install-local.ps1 again: settings and accounts stay
+```
+
+## Providers
+
+Each provider reads the login you already use. Nothing is sent anywhere except to that
+provider.
+
+| Provider | What it shows | Login it reads |
+|---|---|---|
+| Claude (Anthropic) | Session (5h), week (7d), model limits such as Fable, usage credits | `~/.claude`, plus saved accounts in the app |
+| Anthropic API credits | Console prepaid balance | A saved Console website login |
+| OpenAI Codex | Session, week, purchased credits | The Codex login, plus saved accounts in the app |
+| GitHub Copilot | Monthly premium requests, chat, completions | `gh auth login`. One quota covers Copilot CLI and VS Code. |
+| Antigravity | Model quotas | The running Antigravity app |
+| Gemini | Code Assist model quotas | Gemini CLI |
+| Cursor | Included and on-demand usage | A dashboard login, or a Teams Admin API key |
+
+Fresh Claude numbers, and OpenAI numbers with no saved account, can need a tiny CLI probe. That
+probe uses a very small amount of your plan. Saved OpenAI accounts and Copilot read their quota
+with no prompt.
+
+## The overlay
+
+- **Full size** is one table: a group per provider, a row per account, and the same columns for
+  every account (Session, Week, Other limits, Credits). Compare accounts at a glance.
+- **Active / All.** Active hides providers with no usage this period or no data, and one line
+  names what is hidden. The choice is saved.
+- **Percent used**, the same direction as Claude Code's `/usage`. Bars warm from green to amber
+  to salmon as they fill.
+- **Status** is an icon with its own shape: Optimal, Good, Watch, Needs attention. Hover it for
+  the label, or hover a cell for the full reset date.
+- **Resize** from any edge. Smaller sizes change to compact cards, then to a one-line strip.
 
 ![Compact cards](docs/screenshot-compact.png)
 
 ![Mini strip](docs/screenshot-mini-strip.png)
 
-Settings let you pick the refresh interval, UI scale, which providers appear, whether the overlay stays always-on-top, and more:
+## Accounts
 
-![Settings dialog](docs/screenshot-settings.png)
+**Claude.** Add as many accounts as you like. Each gets its own row. **Switch CLI to this** moves
+the `claude` CLI login to that account, and the login you leave is kept so you can switch back.
+The first saved account also saves your current `claude` login, so its row stays.
 
-Monitor multiple Claude accounts side by side, each with its own row in the table, and switch which account the claude CLI uses with one click:
+![Claude accounts](docs/screenshot-accounts.png)
 
-![Claude accounts dialog](docs/screenshot-accounts.png)
+Adding an account never opens a browser by itself. Copy the sign-in link, or open it in a private
+window of your default browser, then paste the code. The app checks who signed in before it saves
+anything: a duplicate account or the wrong email is rejected.
 
-Adding a Claude account never opens a browser by itself. Copy the sign-in link or open it in a private window, then paste the code. The app checks who signed in before it saves anything:
+![Claude sign-in](docs/screenshot-claude-login.png)
 
-![Claude sign-in window](docs/screenshot-claude-login.png)
+**Usage credits.** Under an account, **Connect usage credits** signs in to the Claude website
+once, so the prepaid balance shows in that account's Credits column.
 
-Save multiple OpenAI accounts and monitor them independently of the login currently used by Codex:
+**OpenAI.** Saved accounts use their own Codex homes, so they never change your normal Codex
+login.
 
-![OpenAI accounts dialog](docs/screenshot-openai-accounts.png)
+![OpenAI accounts](docs/screenshot-openai-accounts.png)
 
-# Install #
+## Settings
 
-This is a personal copy of [SethRobinson/AIUsageMonitor](https://github.com/SethRobinson/AIUsageMonitor), forked at V1.21. It needs the .NET 10 SDK (`winget install Microsoft.DotNet.SDK.10`). Build and install it on this PC with:
+The refresh interval, UI scale, which providers to check, always on top, start with Windows, and
+each provider's setup.
+
+![Settings](docs/screenshot-settings.png)
+
+## Install
+
+Needs Windows and the .NET 10 SDK (`winget install Microsoft.DotNet.SDK.10`).
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\install-local.ps1
 ```
 
-The script installs to `%LOCALAPPDATA%\Programs\AIUsageMonitor` and starts the app. Run it again to update. Settings and saved accounts are kept. Changes since the fork are in [CHANGELOG.md](CHANGELOG.md).
+The script builds a self-contained exe, replaces the copy in
+`%LOCALAPPDATA%\Programs\AIUsageMonitor`, adds a Start menu shortcut, and starts it. A failed build
+leaves the running copy alone. The build is not code-signed. App data (saved accounts, website
+logins) is in `%LOCALAPPDATA%\AIUsageMonitor`.
 
-# What's new #
+## Develop
 
-- **V1.21:** Settings are now saved with an atomic write (written to a temp file, flushed to disk, then renamed into place), so a power outage mid-save can't leave you with a broken settings file. If one is ever unreadable anyway, the app sets it aside and starts fresh instead of getting silently stuck with no tray icon.
-- **V1.20:** Claude usage credits show up on your account's card (connect them from the Claude Accounts dialog). Also fixed some multi-account mixups.
-- **V1.19:** Purchased ChatGPT credits show up on OpenAI cards.
-- **V1.18:** Save multiple OpenAI accounts and monitor them separately. Account names now show on compact cards too.
-- **V1.17:** Notices when you log into a different Claude account outside the app, so cards don't get mixed up.
-- **V1.16:** Better layouts at all window sizes.
-- **V1.15:** Resize the window from any edge, plus a new stacked layout for tall, narrow windows.
+| Task | Command |
+|---|---|
+| Build | `dotnet build` |
+| Tests | `dotnet test .\tests\AIUsageMonitor.Tests\AIUsageMonitor.Tests.csproj` |
+| Fake refresh | `dotnet run --project .\tools\AIUsageMonitor.Diagnostics -- refresh --fake --scenario staggered --assert-independent` |
+| Live check, one provider | `dotnet run --project .\tools\AIUsageMonitor.Diagnostics -- refresh --live --provider "GitHub Copilot"` |
+| Layout sweep (544 sizes) | `dotnet run --project .\AIUsageMonitor.csproj -- --layout-sweep .\artifacts\layout-sweep` |
+| README screenshots | `dotnet run --project .\AIUsageMonitor.csproj -- --screenshot .\docs\screenshot-full.png --screenshot-size 1440x800` (the other modes are in `AGENTS.md`) |
 
-# Info #
+Screenshots and the sweep use the demo data in `usage.fake.json`. They never read your settings or
+logins. [`AGENTS.md`](AGENTS.md) holds the rules for AI agents that work here.
 
-Windows tray app for checking remaining AI subscription usage across Anthropic, OpenAI/Codex, Antigravity, Gemini, and Cursor.
+## Layout
 
-Warning: refreshing stale Anthropic data or automatic OpenAI data may run a tiny CLI probe, which can consume a small amount of your plan usage. Saved OpenAI accounts read quota directly through Codex account requests without sending a model prompt.
+```
+Collectors/     One collector per provider: reads a login and returns quota windows
+Services/       Refresh, accounts, sign-in, settings, screenshots, the layout sweep
+ViewModels/     Cards, the account table, status, and the VortexOne colours
+Views/          The overlay, the table, and the dialogs (XAML)
+Assets/Fonts/   Inter and DM Mono (SIL OFL 1.1)
+App.xaml        Design tokens and the dark style for every standard control
+tools/          install-local.ps1 and the diagnostics CLI
+tests/          MSTest suite
+docs/           Feature notes, ADRs, and README screenshots
+```
 
-This is app was stupid easy to make, so you have a need for it, you undoubtely can just have AI make your own.  Even so, I like to put things like this on Github though to stay organized and have reliable source backups.
+## Docs
 
-- Always-on-top overlay with percentage used (the same direction as Claude Code's `/usage`), reset times, plan names, and per-provider last checked status.
-- Supports Anthropic, OpenAI/Codex, Antigravity, Gemini, and Cursor local usage checks.
-- Multiple accounts for OpenAI and Anthropic (Claude), each with its own label and a row under its provider. Add and manage accounts in Settings.
-- Claude usage credits: use **Settings > Anthropic > Accounts > Connect usage credits** beside each account, sign into that account on Claude, and select **Connect**. The app verifies the account and organization, then adds its prepaid balance to that account's Credits column and card, including the mini strip. Use **Reconnect credits** when the session expires or **Disconnect credits** to remove it. The additional website login is needed when Claude Code's usage response does not expose the balance.
-- Anthropic API credits show as an **API credits** row under Anthropic, and keep an **Anthropic API** label on the mini strip. Console/API credits and Claude subscription usage credits remain separate balances.
-- Purchased ChatGPT usage credits show as a "Credits" balance row on the OpenAI card (for saved accounts and the automatic Codex card) so you can see what is left once the plan windows hit 100% used.
-- A model limit, such as Fable weekly, shows in the **Other limits** column of its account. A money cap such as extra usage shows under **Credits**. In the strips, small grouped cards keep their account labels, such as `Fable - Seth - 65%` (percent used).
-- Tray controls for show/hide, refresh now, settings, logs, and exit.
-- Layout adjusts as you drag the size to fit more or less info, UI scale slider in its Settings
-- Provider errors go to copyable logs and use backoff to avoid hammering services.
-- Build from VS Code with `dotnet build`; run with `dotnet run --project AIUsageMonitor.csproj`.
-- Build and install a standalone Windows x64 exe on this PC with `tools\install-local.ps1`.
+- [docs/adr/0001-overlay-account-table.md](docs/adr/0001-overlay-account-table.md): why the
+  overlay is a table, the VortexOne design language, and the owner's exceptions to it.
+- [docs/claude-accounts.md](docs/claude-accounts.md): Claude accounts, sign-in, the live
+  `~/.claude` identity, and account switching.
+- [docs/openai-accounts.md](docs/openai-accounts.md): saved OpenAI accounts and their Codex homes.
+- [docs/claude-usage-credits.md](docs/claude-usage-credits.md): the website login for usage
+  credits. It uses an undocumented endpoint, so a website change can stop the balance for a while.
 
-Requires Windows and the .NET 10 SDK for development.
+## Versioning
 
-Developer details and fake-test coverage: [OpenAI account architecture](docs/openai-accounts.md).
-
-Claude billing authentication, account isolation, and refresh behavior: [Claude usage credits](docs/claude-usage-credits.md). This uses an undocumented website endpoint; website changes or browser challenges can temporarily prevent balance collection while quota monitoring continues.
-
-## AI Disclosure
-
-This project was developed with significant assistance from AI tools, both upstream and in this copy.
+`VersionText` in `Services/AppMetadata.cs` holds the version, `CHANGELOG.md` records what changed,
+and each release is tagged `vX.Y.Z`. **Patch** is a fix, **minor** adds a provider or a feature,
+and **major** changes the settings format or removes a provider. Run `/bump-version` to cut a
+release.
 
 ## Credits
 
-Original app created by Seth A. Robinson - [GitHub](https://github.com/SethRobinson/AIUsageMonitor) | [Homepage](https://www.rtsoft.com/) | [Blog](https://www.codedojo.com/) | [Twitter](https://twitter.com/rtsoft) | [Bluesky](https://bsky.app/profile/rtsoft.com) | [Mastodon](https://mastodon.gamedev.place/@rtsoft)
+Based on [AIUsageMonitor](https://github.com/SethRobinson/AIUsageMonitor) by Seth A. Robinson
+(MIT). His project history before the fork is in that repository. Fonts: Inter and DM Mono, SIL
+OFL 1.1 ([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)). Built with substantial help from AI
+tools.

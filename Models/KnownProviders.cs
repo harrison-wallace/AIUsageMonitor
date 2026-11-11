@@ -8,6 +8,7 @@ public static class KnownProviders
     public const string Antigravity = "Antigravity";
     public const string Gemini = "Gemini";
     public const string Cursor = "Cursor";
+    public const string GitHubCopilot = "GitHub Copilot";
 
     public static readonly IReadOnlyList<string> All =
     [
@@ -16,6 +17,7 @@ public static class KnownProviders
         OpenAI,
         Antigravity,
         Gemini,
-        Cursor
+        Cursor,
+        GitHubCopilot
     ];
 }

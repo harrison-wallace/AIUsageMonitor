@@ -55,7 +55,8 @@ public sealed class UsageAggregatorService
             new CodexLogUsageCollector(logService, settingsService),
             new AntigravityUsageCollector(),
             new GeminiUsageCollector(),
-            new CursorUsageCollector(settingsService)
+            new CursorUsageCollector(settingsService),
+            new GitHubCopilotUsageCollector()
         ];
     }
 
