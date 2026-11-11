@@ -13,7 +13,8 @@ public sealed class UsageWindowDisplay
         Limit = usageWindow.Limit;
         Used = usageWindow.Used;
         Remaining = usageWindow.EffectiveRemaining;
-        UsedPercent = usageWindow.UsedPercent;
+        // Derived from the remaining percent so the text, the bar, and the status colour agree.
+        UsedPercent = 100 - usageWindow.RemainingPercent;
         RemainingPercent = usageWindow.RemainingPercent;
         Detail = usageWindow.Detail;
         IsBalance = usageWindow.IsBalance;
@@ -23,9 +24,9 @@ public sealed class UsageWindowDisplay
         if (usageWindow.IsInactive)
         {
             // No usable quota on this plan: show a calm greyed row instead of an alarming
-            // "0% left / reset passed". The card excludes inactive windows from its status.
+            // "100% used / reset passed". The card excludes inactive windows from its status.
             var muted = UsageStatus.Unavailable;
-            RemainingText = "N/A";
+            ValueText = "N/A";
             LimitText = string.IsNullOrWhiteSpace(usageWindow.Detail) ? "Not on this plan" : usageWindow.Detail;
             ResetText = string.Empty;
             ResetRelativeText = string.Empty;
@@ -42,10 +43,12 @@ public sealed class UsageWindowDisplay
             ? usageWindow.EffectiveRemaining > 0 ? 100 : 0
             : usageWindow.RemainingPercent);
 
-        RemainingText = string.IsNullOrWhiteSpace(usageWindow.RemainingText)
-            ? $"{usageWindow.RemainingPercent:0}% left"
+        // Quota rows show the percent used, like Claude Code's /usage. A collector-supplied text,
+        // such as a credit balance, is shown as it is.
+        ValueText = string.IsNullOrWhiteSpace(usageWindow.RemainingText)
+            ? $"{UsedPercent:0}% used"
             : usageWindow.RemainingText;
-        LimitText = string.IsNullOrWhiteSpace(Detail) ? RemainingText : Detail;
+        LimitText = string.IsNullOrWhiteSpace(Detail) ? ValueText : Detail;
         ResetText = usageWindow.HideReset
             ? string.Empty
             : usageWindow.ResetAt is { } resetAt
@@ -83,7 +86,7 @@ public sealed class UsageWindowDisplay
 
     public double RemainingPercent { get; }
 
-    public string RemainingText { get; }
+    public string ValueText { get; }
 
     public string LimitText { get; }
 

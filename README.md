@@ -50,13 +50,13 @@ Warning: refreshing stale Anthropic data or automatic OpenAI data may run a tiny
 
 This is app was stupid easy to make, so you have a need for it, you undoubtely can just have AI make your own.  Even so, I like to put things like this on Github though to stay organized and have reliable source backups.
 
-- Always-on-top overlay with percentage remaining, reset times, plan names, and per-provider last checked status.
+- Always-on-top overlay with percentage used (the same direction as Claude Code's `/usage`), reset times, plan names, and per-provider last checked status.
 - Supports Anthropic, OpenAI/Codex, Antigravity, Gemini, and Cursor local usage checks.
 - Multiple accounts for OpenAI and Anthropic (Claude), each with its own label and usage card. Add and manage accounts in Settings.
 - Claude usage credits: use **Settings > Anthropic > Accounts > Connect usage credits** beside each account, sign into that account on Claude, and select **Connect**. The app verifies the account and organization, then adds its prepaid balance in yellow to its existing card, including the mini strip. Use **Reconnect credits** when the session expires or **Disconnect credits** to remove it. The additional website login is needed when Claude Code's usage response does not expose the balance.
 - The separate Anthropic API Credits card also uses a yellow balance and keeps an **Anthropic API** label on the mini strip. Console/API credits and Claude subscription usage credits remain separate balances.
-- Purchased ChatGPT usage credits show as a "Credits" balance row on the OpenAI card (for saved accounts and the automatic Codex card) so you can see what is left once the plan windows hit 0%.
-- Small grouped cards keep their account labels, such as `Fable - Seth - 35%`.
+- Purchased ChatGPT usage credits show as a "Credits" balance row on the OpenAI card (for saved accounts and the automatic Codex card) so you can see what is left once the plan windows hit 100% used.
+- Small grouped cards keep their account labels, such as `Fable - Seth - 65%` (percent used).
 - Tray controls for show/hide, refresh now, settings, logs, and exit.
 - Layout adjusts as you drag the size to fit more or less info, UI scale slider in its Settings
 - Provider errors go to copyable logs and use backoff to avoid hammering services.

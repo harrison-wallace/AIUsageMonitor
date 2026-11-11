@@ -10,6 +10,11 @@ which change gets which increment.
 
 ### Changed
 
+- Quota cards show the percent **used**, the same direction as Claude Code's `/usage`. Rows read
+  `33% used`, card headlines read `Anthropic - 33% used`, and bars fill as quota is used. The mini
+  strip shows only the number. Status colours still turn amber and red as quota runs out. Credit
+  balances still show the amount left. The Claude Code status line reads `5h 3% used`.
+
 - The app is rebranded "AI Usage Monitor". Window titles, the tray menu, and setup text drop
   "Seth's". The About window and `README.md` credit Seth A. Robinson as the original author.
 - App data moves from `%LOCALAPPDATA%\SethsAIUsageMonitor` to `%LOCALAPPDATA%\AIUsageMonitor`, and the

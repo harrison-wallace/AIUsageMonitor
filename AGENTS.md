@@ -192,6 +192,10 @@ sections.
   `AppSettingsServiceRecoveryTests`.
 - `App.OnStartup` shows a message and exits on a startup failure. It must never leave a process
   with no tray icon that holds the single-instance lock.
+- Quota rows and card headlines show percent **used** (`UsageWindowDisplay.ValueText`,
+  `ProviderUsageCard.PrimaryUsedPercent`), derived as 100 minus the remaining percent. Status and
+  colours still come from the remaining percent. Collector-supplied text, such as a balance, is
+  shown as it is. The mini strip omits the word "used" for space.
 - Balance rows (`IsBalance`) stay out of headline quota percentages. All balance rows use the
   amber `UsageWindowDisplay.IsHighlightedBalance` colour, `#FBBF24`.
 

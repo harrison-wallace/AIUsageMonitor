@@ -50,11 +50,11 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
         OverallStatusBackground = status.Background;
         SummaryProgressBrush = status.Foreground;
         IsBalanceOnly = activeWindows.Count > 0 && activeWindows.All(window => window.IsBalance);
-        BalanceSummaryText = IsBalanceOnly ? activeWindows[0].RemainingText : string.Empty;
+        BalanceSummaryText = IsBalanceOnly ? activeWindows[0].ValueText : string.Empty;
         // Keep the provider/account name and put the balance beside it on the mini strip.
         SecondaryBalanceText = usage.IsUnavailable
             ? string.Empty
-            : activeWindows.FirstOrDefault(window => window.IsBalance)?.RemainingText ?? string.Empty;
+            : activeWindows.FirstOrDefault(window => window.IsBalance)?.ValueText ?? string.Empty;
         if (IsBalanceOnly && ShortName == KnownProviders.AnthropicApiCredits && SecondaryBalanceText.EndsWith(" credits", StringComparison.Ordinal))
             SecondaryBalanceText = SecondaryBalanceText[..^8]; // Leave room for the Anthropic API label on the mini strip.
         HasSecondaryBalance = !string.IsNullOrWhiteSpace(SecondaryBalanceText);
@@ -62,13 +62,14 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
             ? $"{ShortName} - {GetUnavailableSummary(usage.StatusMessage)}"
             : !string.IsNullOrWhiteSpace(BalanceSummaryText)
             ? $"{ShortName} - {BalanceSummaryText}"
-            : $"{ShortName} - {PrimaryRemainingPercent:0}%";
+            : $"{ShortName} - {PrimaryUsedPercent:0}% used";
         _compactSummaryText = _summaryText;
         _miniSummaryText = usage.IsUnavailable || activeWindows.Count == 0
             ? $"{ConstrainedShortName} - {GetUnavailableSummary(usage.StatusMessage)}"
             : !string.IsNullOrWhiteSpace(BalanceSummaryText)
             ? ConstrainedShortName
-            : $"{ConstrainedShortName} - {PrimaryRemainingPercent:0}%";
+            // The mini strip has no room for "used". Its bar fills as quota is used, so the number reads the same way.
+            : $"{ConstrainedShortName} - {PrimaryUsedPercent:0}%";
         RefreshCheckedText();
     }
 
@@ -113,6 +114,8 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
     public bool HasWindows => Windows.Count > 0;
 
     public double PrimaryRemainingPercent { get; }
+
+    public double PrimaryUsedPercent => 100 - PrimaryRemainingPercent;
 
     public bool ShowsSummaryProgress { get; }
 

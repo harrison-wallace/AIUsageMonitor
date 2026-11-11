@@ -128,7 +128,7 @@ function Get-FirstProp($obj, [string[]]$names) {
     return $null
 }
 
-function Format-Left($label, $window) {
+function Format-Used($label, $window) {
     if ($null -eq $window) {
         return $null
     }
@@ -142,8 +142,8 @@ function Format-Left($label, $window) {
         return $null
     }
 
-    $left = [Math]::Max(0, 100 - [double]$used)
-    return ('{0} {1}% left' -f $label, [Math]::Round($left))
+    $usedPercent = [Math]::Min(100, [Math]::Max(0, [double]$used))
+    return ('{0} {1}% used' -f $label, [Math]::Round($usedPercent))
 }
 
 try {
@@ -185,8 +185,8 @@ try {
 
     $export | ConvertTo-Json -Depth 64 | Set-Content -LiteralPath $outputPath -Encoding UTF8
 
-    $fiveHourText = Format-Left '5h' (Get-Prop $rateLimits 'five_hour')
-    $sevenDayText = Format-Left '7d' (Get-Prop $rateLimits 'seven_day')
+    $fiveHourText = Format-Used '5h' (Get-Prop $rateLimits 'five_hour')
+    $sevenDayText = Format-Used '7d' (Get-Prop $rateLimits 'seven_day')
     $parts = @($fiveHourText, $sevenDayText) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
     if ($parts.Count -gt 0) {

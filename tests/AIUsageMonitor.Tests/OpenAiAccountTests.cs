@@ -331,14 +331,14 @@ public sealed class OpenAiAccountTests
         var vm = new UsageOverlayViewModel();
         vm.ApplyProvider(await collector.CollectAsync(default));
         var card = vm.Providers.Single();
-        Assert.AreEqual($"Fable - {label} - 35%", card.MiniSummaryText);
+        Assert.AreEqual($"Fable - {label} - 65%", card.MiniSummaryText);
         Assert.AreEqual(account.DisplayKey, card.SourceProviderName);
         vm.SetChecking([account.DisplayKey]);
         Assert.AreSame(card, vm.Providers.Single());
         Assert.AreEqual($"Fable - {label} - checking", card.MiniSummaryText);
         vm.ApplyProvider(await collector.CollectAsync(default));
         Assert.HasCount(1, vm.Providers);
-        Assert.AreEqual($"Fable - {label} - 35%", vm.Providers.Single().MiniSummaryText);
+        Assert.AreEqual($"Fable - {label} - 65%", vm.Providers.Single().MiniSummaryText);
     }
 
     [TestMethod]

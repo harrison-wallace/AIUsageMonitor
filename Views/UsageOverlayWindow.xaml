@@ -612,7 +612,7 @@
                                                                                FontWeight="SemiBold" />
                                                                     <TextBlock Grid.Column="1"
                                                                                Margin="12,0,0,0"
-                                                                               Text="{Binding RemainingText}"
+                                                                               Text="{Binding ValueText}"
                                                                                FontSize="13"
                                                                                FontWeight="SemiBold">
                                                                     <TextBlock.Style>
@@ -630,7 +630,7 @@
 
                                                                 <ProgressBar Margin="0,7,0,0"
                                                                              Height="9"
-                                                                             Value="{Binding RemainingPercent, Mode=OneWay}"
+                                                                             Value="{Binding UsedPercent, Mode=OneWay}"
                                                                              Foreground="{Binding ProgressBrush}">
                                                                     <ProgressBar.Style>
                                                                         <Style TargetType="{x:Type ProgressBar}"
@@ -764,7 +764,7 @@
                                                                            FontSize="14"
                                                                            FontWeight="SemiBold" />
                                                                 <TextBlock Grid.Column="1"
-                                                                           Text="{Binding RemainingText}"
+                                                                           Text="{Binding ValueText}"
                                                                            FontSize="14"
                                                                            FontWeight="SemiBold">
                                                                 <TextBlock.Style>
@@ -782,7 +782,7 @@
 
                                                             <ProgressBar Margin="0,9,0,0"
                                                                          Height="12"
-                                                                         Value="{Binding RemainingPercent, Mode=OneWay}"
+                                                                         Value="{Binding UsedPercent, Mode=OneWay}"
                                                                          Foreground="{Binding ProgressBrush}">
                                                                 <ProgressBar.Style>
                                                                     <Style TargetType="{x:Type ProgressBar}"
@@ -884,7 +884,7 @@
                                                                          Margin="8,0,8,0"
                                                                          Height="6"
                                                                          VerticalAlignment="Center"
-                                                                         Value="{Binding RemainingPercent, Mode=OneWay}"
+                                                                         Value="{Binding UsedPercent, Mode=OneWay}"
                                                                          Foreground="{Binding ProgressBrush}">
                                                                 <ProgressBar.Style>
                                                                     <Style TargetType="{x:Type ProgressBar}"
@@ -906,7 +906,7 @@
                                                                        VerticalAlignment="Center" />
                                                             <TextBlock Grid.Column="3"
                                                                        Margin="8,0,0,0"
-                                                                       Text="{Binding RemainingText}"
+                                                                       Text="{Binding ValueText}"
                                                                        FontSize="11"
                                                                        FontWeight="SemiBold"
                                                                        VerticalAlignment="Center">
@@ -952,7 +952,7 @@
                                                         <StackPanel Margin="0,2,0,2"
                                                                     VerticalAlignment="Center">
                                                             <ProgressBar Height="5"
-                                                                         Value="{Binding RemainingPercent, Mode=OneWay}"
+                                                                         Value="{Binding UsedPercent, Mode=OneWay}"
                                                                          Foreground="{Binding ProgressBrush}">
                                                                 <ProgressBar.Style>
                                                                     <Style TargetType="{x:Type ProgressBar}"
@@ -979,7 +979,7 @@
                                                                             <Setter Property="Foreground" Value="#A8AFBA" />
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding IsBalance}" Value="True">
-                                                                                    <Setter Property="Text" Value="{Binding RemainingText}" />
+                                                                                    <Setter Property="Text" Value="{Binding ValueText}" />
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding IsHighlightedBalance}" Value="True">
                                                                                     <Setter Property="Foreground" Value="#FBBF24" />
@@ -1026,7 +1026,7 @@
                                             </Grid>
                                             <ProgressBar Margin="0,4,0,0"
                                                          Height="4"
-                                                         Value="{Binding PrimaryRemainingPercent, Mode=OneWay}"
+                                                         Value="{Binding PrimaryUsedPercent, Mode=OneWay}"
                                                          Foreground="{Binding SummaryProgressBrush}">
                                                 <ProgressBar.Style>
                                                     <Style TargetType="{x:Type ProgressBar}"
