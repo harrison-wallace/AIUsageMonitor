@@ -13,8 +13,8 @@ namespace AIUsageMonitor.Collectors;
 //
 // Source: GET https://api.github.com/copilot_internal/user, the endpoint the Copilot editor
 // integrations call. It is undocumented and may change. It is read-only and uses no quota.
-// Token: COPILOT_GITHUB_TOKEN, GH_TOKEN, or GITHUB_TOKEN, else `gh auth token`. The token stays
-// in memory only.
+// Token: COPILOT_GITHUB_TOKEN, GH_TOKEN, or GITHUB_TOKEN, else `gh auth token`, read on each
+// refresh. The token is never stored.
 public sealed class GitHubCopilotUsageCollector : IUsageCollector
 {
     private const string Source = "GitHub Copilot user endpoint";
@@ -33,7 +33,6 @@ public sealed class GitHubCopilotUsageCollector : IUsageCollector
 
     private readonly HttpClient _httpClient;
     private readonly Func<CancellationToken, Task<string?>> _tokenProvider;
-    private string? _cachedToken;
 
     public GitHubCopilotUsageCollector(HttpClient? httpClient = null, Func<CancellationToken, Task<string?>>? tokenProvider = null)
     {
@@ -45,7 +44,8 @@ public sealed class GitHubCopilotUsageCollector : IUsageCollector
 
     public async Task<ProviderUsage> CollectAsync(CancellationToken cancellationToken)
     {
-        var token = _cachedToken ?? await _tokenProvider(cancellationToken).ConfigureAwait(false);
+        // Read the token every time, so `gh auth switch` or a new GH_TOKEN takes effect on the next refresh.
+        var token = await _tokenProvider(cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(token))
         {
             return ProviderUsageFactory.Unavailable(
@@ -64,7 +64,6 @@ public sealed class GitHubCopilotUsageCollector : IUsageCollector
             using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             if (response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden or HttpStatusCode.NotFound)
             {
-                _cachedToken = null;
                 return ProviderUsageFactory.Unavailable(
                     ProviderName,
                     $"GitHub refused the Copilot request ({(int)response.StatusCode}). Check that gh is signed in to the account that has Copilot.",
@@ -76,7 +75,6 @@ public sealed class GitHubCopilotUsageCollector : IUsageCollector
                 return ProviderUsageFactory.Unavailable(ProviderName, $"GitHub returned {(int)response.StatusCode}.", Source);
             }
 
-            _cachedToken = token;
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
             using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
             return Parse(document.RootElement);
@@ -244,9 +242,19 @@ public sealed class GitHubCopilotUsageCollector : IUsageCollector
 
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(GhTimeout);
-            var output = await process.StandardOutput.ReadToEndAsync(timeout.Token).ConfigureAwait(false);
-            await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
-            return process.ExitCode == 0 ? output.Trim() : null;
+            try
+            {
+                var output = await process.StandardOutput.ReadToEndAsync(timeout.Token).ConfigureAwait(false);
+                await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
+                return process.ExitCode == 0 ? output.Trim() : null;
+            }
+            catch (OperationCanceledException)
+            {
+                // A gh that hangs (for example on a keyring prompt) must not be left running.
+                try { process.Kill(entireProcessTree: true); }
+                catch (InvalidOperationException) { }
+                throw;
+            }
         }
         catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or OperationCanceledException && !cancellationToken.IsCancellationRequested)
         {

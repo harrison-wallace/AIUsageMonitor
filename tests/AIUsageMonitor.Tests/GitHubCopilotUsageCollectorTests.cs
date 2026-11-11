@@ -103,6 +103,25 @@ public sealed class GitHubCopilotUsageCollectorTests
     }
 
     [TestMethod]
+    public async Task TokenIsReadOnEveryRefreshSoAnAccountSwitchApplies()
+    {
+        var tokens = new Queue<string>(["first-account", "second-account"]);
+        var seen = new List<string>();
+        var collector = new GitHubCopilotUsageCollector(
+            new HttpClient(new ScriptedHttpHandler(request =>
+            {
+                seen.Add(request.Headers.Authorization!.Parameter!);
+                return Json(HttpStatusCode.OK, FreeAccount);
+            })),
+            _ => Task.FromResult<string?>(tokens.Dequeue()));
+
+        await collector.CollectAsync(CancellationToken.None);
+        await collector.CollectAsync(CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { "first-account", "second-account" }, seen);
+    }
+
+    [TestMethod]
     public async Task MissingLoginAndRefusedTokenAreUnavailable()
     {
         var noLogin = new GitHubCopilotUsageCollector(
