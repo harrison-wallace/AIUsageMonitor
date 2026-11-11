@@ -36,6 +36,9 @@ public sealed class UsageStatus
 
     public ImageSource Icon { get; }
 
+    // The pace icon uses the Watch colour when usage runs ahead of the time passed (ADR 0002).
+    public static MediaBrush AheadOfPaceBrush => Watch.Foreground;
+
     public static UsageStatus FromRemainingPercent(double remainingPercent) => FromUsedPercent(100 - remainingPercent);
 
     public static UsageStatus FromUsedPercent(double usedPercent)

@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Media;
 using AIUsageMonitor.Models;
 using MediaBrush = System.Windows.Media.Brush;
@@ -6,11 +7,29 @@ namespace AIUsageMonitor.ViewModels;
 
 // The full-size overlay is one table: a group per provider, a row per account, and the same
 // columns for every account (docs/adr/0001-overlay-account-table.md).
-public sealed record UsageTableCell(double UsedPercent, string PercentText, string SubText, MediaBrush Brush, string ToolTipText)
+// ElapsedPercent is the share of the window that has passed (session and week only, ADR 0002).
+// The bar shows a tick there. Usage more than PaceMargin points past it is ahead of pace.
+public sealed record UsageTableCell(double UsedPercent, string PercentText, string SubText, MediaBrush Brush, string ToolTipText,
+    double? ElapsedPercent = null)
 {
+    public const double PaceMargin = 10;
+
     public static readonly UsageTableCell Empty = new(0, string.Empty, string.Empty, UsageBrushes.Mute, string.Empty);
 
     public bool HasValue => PercentText.Length > 0;
+
+    public bool HasPace => HasValue && ElapsedPercent.HasValue;
+
+    public bool IsAheadOfPace => HasPace && UsedPercent > ElapsedPercent!.Value + PaceMargin;
+
+    public string PaceText => !HasPace ? string.Empty : IsAheadOfPace ? "Ahead of pace" : "On pace";
+
+    public MediaBrush PaceBrush => IsAheadOfPace ? UsageStatus.AheadOfPaceBrush : UsageBrushes.Mute;
+
+    // Star widths that put the tick at ElapsedPercent across the bar.
+    public GridLength ElapsedWidth => new(Math.Max(ElapsedPercent ?? 0, 0.001), GridUnitType.Star);
+
+    public GridLength RemainingWidth => new(Math.Max(100 - (ElapsedPercent ?? 0), 0.001), GridUnitType.Star);
 }
 
 public sealed record UsageTableRow(
@@ -57,13 +76,17 @@ public static class UsageTableBuilder
 {
     private const string Checking = "Checking";
 
-    public static UsageTable Build(IEnumerable<ProviderUsageCard> cards, bool showUnused)
+    private static readonly TimeSpan SessionLength = TimeSpan.FromHours(5);
+    private static readonly TimeSpan WeekLength = TimeSpan.FromDays(7);
+
+    public static UsageTable Build(IEnumerable<ProviderUsageCard> cards, bool showUnused, DateTimeOffset? now = null)
     {
+        var at = now ?? DateTimeOffset.Now;
         // A source provider can render as several cards (a model group such as "Fable" splits
         // into its own card). In the table they are one account again.
         var rows = cards
             .GroupBy(card => card.SourceProviderName, StringComparer.OrdinalIgnoreCase)
-            .Select(group => BuildRow(group.ToList()))
+            .Select(group => BuildRow(group.ToList(), at))
             .ToList();
 
         // When every row is unused, hiding them all would leave an empty overlay.
@@ -97,7 +120,7 @@ public static class UsageTableBuilder
         return separator > 0 ? sourceProviderName[..separator] : sourceProviderName;
     }
 
-    private static UsageTableRow BuildRow(IReadOnlyList<ProviderUsageCard> cards)
+    private static UsageTableRow BuildRow(IReadOnlyList<ProviderUsageCard> cards, DateTimeOffset now)
     {
         var first = cards[0];
         var source = first.SourceProviderName;
@@ -130,8 +153,8 @@ public static class UsageTableBuilder
             source,
             account,
             detail,
-            Cell(session, includeTitle: false),
-            Cell(week, includeTitle: false),
+            Cell(session, includeTitle: false, windowLength: SessionLength, now: now),
+            Cell(week, includeTitle: false, windowLength: WeekLength, now: now),
             others.Count == 0 ? UsageTableCell.Empty : Cell(others[0], includeTitle: true, more: others.Count - 1),
             string.Join(" · ", balances.Select(window => TrimCreditsWord(window.ValueText))),
             string.Join(" · ", moneyCaps.Select(window => $"{window.Title} {window.ValueText}")),
@@ -143,7 +166,8 @@ public static class UsageTableBuilder
             isUnavailable && !isChecking);
     }
 
-    private static UsageTableCell Cell(UsageWindowDisplay? window, bool includeTitle, int more = 0)
+    private static UsageTableCell Cell(UsageWindowDisplay? window, bool includeTitle, int more = 0,
+        TimeSpan? windowLength = null, DateTimeOffset? now = null)
     {
         if (window is null)
         {
@@ -164,12 +188,32 @@ public static class UsageTableBuilder
         var resetDetail = window.ResetText.Length > 0 && window.ResetRelativeText.Length > 0
             ? $"{window.ResetText} ({window.ResetRelativeText})"
             : window.ResetText;
+        var elapsed = ElapsedPercent(window.ResetAt, windowLength, now);
+        var toolTip = resetDetail.Length > 0 ? $"{window.Title}: {window.UsedPercent:0}% used. {resetDetail}." : $"{window.Title}: {window.UsedPercent:0}% used.";
+        if (elapsed is { } passed)
+        {
+            toolTip += $" {passed:0}% of the window has passed.";
+        }
+
         return new UsageTableCell(
             window.UsedPercent,
             $"{window.UsedPercent:0}%",
             string.Join(" · ", parts),
             UsageStatus.FromUsedPercent(window.UsedPercent).Foreground,
-            resetDetail.Length > 0 ? $"{window.Title}: {window.UsedPercent:0}% used. {resetDetail}." : $"{window.Title}: {window.UsedPercent:0}% used.");
+            toolTip,
+            elapsed);
+    }
+
+    // The share of a fixed-length window that has passed, from its reset time. Null when unknown.
+    internal static double? ElapsedPercent(DateTimeOffset? resetAt, TimeSpan? windowLength, DateTimeOffset? now)
+    {
+        if (resetAt is not { } reset || windowLength is not { } length || now is not { } at || length <= TimeSpan.Zero)
+        {
+            return null;
+        }
+
+        var left = (reset - at).TotalSeconds / length.TotalSeconds;
+        return Math.Clamp(100 * (1 - left), 0, 100);
     }
 
     // The column header already says Credits: "$113.85 credits" -> "$113.85".

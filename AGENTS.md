@@ -213,6 +213,13 @@ sections.
 - Fonts: Inter 400 and 500 and DM Mono 400 are WPF resources in `Assets/Fonts` (OFL, see
   `THIRD_PARTY_NOTICES.md`). `App`'s static constructor makes Inter the default for every window;
   it must touch `PackUriHelper` first, or the `pack://` URI throws before the app starts.
+- **Minimal text** is a design rule (ADR 0002). The overlay shows the fewest words that keep the
+  meaning. An icon or a mark replaces a label when the shape is clear, and the words go in a
+  tooltip: provider logos, status icons, the pace icon, "4h" and not "4h left".
+- Session and Week cells use `PaceCellTemplate`: a tick on the bar at `ElapsedPercent` (the share
+  of a 5h session or a 7d week that has passed, from `ResetAt`) and a pace icon after the time
+  left. Usage more than `UsageTableCell.PaceMargin` (10) points past the tick is ahead of pace
+  (rising arrow, Watch colour). No reset time means no tick and no icon.
 - Provider logos (`ProviderLogos`, Simple Icons path data, CC0) replace the provider name on the
   overlay, filled with the provider accent. `StripPrefix` removes the name from the text beside
   the logo. A provider with no logo keeps its name. `SummaryText` and the other text properties
@@ -229,7 +236,7 @@ Read the linked doc before you change the feature.
 | Claude accounts, sign-in, slot identity, account switch | [docs/claude-accounts.md](docs/claude-accounts.md) | The `~/.claude` slot identity is resolved live every refresh. Token and `oauthAccount` block always move together. Sign-in saves nothing until the identity is checked. |
 | OpenAI saved accounts | [docs/openai-accounts.md](docs/openai-accounts.md) | Isolated Codex homes. Never read shared sessions or switch the normal Codex login. |
 | Claude usage credits and website billing | [docs/claude-usage-credits.md](docs/claude-usage-credits.md) | `spend.balance: null` never means zero. Billing reads go through the WebView2 browser, not `HttpClient`. |
-| Overlay account table | [docs/adr/0001-overlay-account-table.md](docs/adr/0001-overlay-account-table.md) | Full size only (`DisplayMode` Full); compact and mini stay cards. `UsageTableBuilder` groups cards by `SourceProviderName`, so a model-group card rejoins its account row. Active / All (`ShowUnusedProviders`, saved in settings) also filters `VisibleProviders` for the strips; when every row is unused, all show. The layout sweep measures the table in Full mode. |
+| Overlay account table | [docs/adr/0001-overlay-account-table.md](docs/adr/0001-overlay-account-table.md), [0002](docs/adr/0002-pace-bar-and-minimal-text.md) | Full size only (`DisplayMode` Full); compact and mini stay cards. `UsageTableBuilder` groups cards by `SourceProviderName`, so a model-group card rejoins its account row. Active / All (`ShowUnusedProviders`, saved in settings) also filters `VisibleProviders` for the strips; when every row is unused, all show. The layout sweep measures the table in Full mode. |
 | GitHub Copilot | `Collectors\GitHubCopilotUsageCollector.cs` | Undocumented `api.github.com/copilot_internal/user`, read with the `gh` login (`COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, `GITHUB_TOKEN` first). One account quota covers Copilot CLI and every editor. An entitlement of 0 is "Not on this plan", and unlimited quotas are inactive rows. The token is read on every refresh (so `gh auth switch` applies) and never stored. |
 | ChatGPT purchased credits | `Collectors\CodexCredits.cs` | A credit count, not dollars. Added only when the account holds credits. |
 | Claude subscription credits | `Collectors\ClaudeUsageCredits.cs` | Read `spend.balance`. Never derive it from `monthly_limit - used_credits`. |

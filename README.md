@@ -48,6 +48,8 @@ with no prompt.
   names what is hidden. The choice is saved.
 - **Percent used**, the same direction as Claude Code's `/usage`. Bars warm from green to amber
   to salmon as they fill.
+- **Pace.** The white tick on a Session or Week bar marks how much of the window has passed. The
+  arrow after the time left rises, in amber, when you use quota faster than time passes.
 - **Status** is an icon with its own shape: Optimal, Good, Watch, Needs attention. Hover it for
   the label, or hover a cell for the full reset date.
 - **Resize** from any edge. Smaller sizes change to compact cards, then to a one-line strip.
@@ -131,6 +133,8 @@ docs/           Feature notes, ADRs, and README screenshots
 
 - [docs/adr/0001-overlay-account-table.md](docs/adr/0001-overlay-account-table.md): why the
   overlay is a table, the VortexOne design language, and the owner's exceptions to it.
+- [docs/adr/0002-pace-bar-and-minimal-text.md](docs/adr/0002-pace-bar-and-minimal-text.md): the
+  pace bar, and the minimal-text design rule.
 - [docs/claude-accounts.md](docs/claude-accounts.md): Claude accounts, sign-in, the live
   `~/.claude` identity, and account switching.
 - [docs/openai-accounts.md](docs/openai-accounts.md): saved OpenAI accounts and their Codex homes.

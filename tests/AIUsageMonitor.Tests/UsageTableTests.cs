@@ -140,6 +140,34 @@ public sealed class UsageTableTests
         Assert.AreEqual(label, UsageStatus.FromUsedPercent(used).Label);
     }
 
+    [TestMethod]
+    public void SessionAndWeekShowTheShareOfTheWindowPassedAndThePace()
+    {
+        var now = DateTimeOffset.Now;
+        var session = new UsageWindow { Title = "5h", Limit = 100, Used = 80, Remaining = 20, ResetAt = now.AddHours(3) }; // 2h of 5h passed: 40%
+        var week = new UsageWindow { Title = "7d", Limit = 100, Used = 30, Remaining = 70, ResetAt = now.AddDays(3.5) }; // half the week passed
+        var card = new ProviderUsageCard(Usage("Anthropic - Work", "Work", "Max 5x", session, week));
+
+        var row = UsageTableBuilder.Build([card], showUnused: true, now).Groups.Single().Rows.Single();
+
+        Assert.AreEqual(40, row.Session.ElapsedPercent!.Value, 0.01);
+        Assert.IsTrue(row.Session.IsAheadOfPace, "80% used with 40% of the session passed.");
+        Assert.AreEqual("Ahead of pace", row.Session.PaceText);
+        Assert.AreEqual(50, row.Week.ElapsedPercent!.Value, 0.01);
+        Assert.IsFalse(row.Week.IsAheadOfPace);
+        Assert.AreEqual("On pace", row.Week.PaceText);
+        Assert.AreEqual("3d", row.Week.SubText, "Minimal text: the time left alone (ADR 0002).");
+    }
+
+    [TestMethod]
+    public void NoResetTimeMeansNoPace()
+    {
+        Assert.IsNull(UsageTableBuilder.ElapsedPercent(null, TimeSpan.FromHours(5), DateTimeOffset.Now));
+        var cell = new UsageTableCell(50, "50%", "4h", UsageBrushes.Mute, string.Empty);
+        Assert.IsFalse(cell.HasPace);
+        Assert.AreEqual(string.Empty, cell.PaceText);
+    }
+
     private static ProviderUsage Usage(string name, string accountLabel, string plan, params UsageWindow[] windows) => new()
     {
         Name = name,

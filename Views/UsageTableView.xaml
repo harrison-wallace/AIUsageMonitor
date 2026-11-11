@@ -95,6 +95,67 @@
             </Grid>
         </DataTemplate>
 
+        <!-- Session and week: the bar has a tick at the share of the window that has passed, and the
+             time left has a pace icon (ADR 0002). The words are in the tooltips. -->
+        <DataTemplate x:Key="PaceCellTemplate" DataType="{x:Type vm:UsageTableCell}">
+            <Grid Margin="0,0,14,0">
+                <TextBlock Text="—" Foreground="{StaticResource Mute}" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasValue}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <StackPanel Visibility="{Binding HasValue, Converter={StaticResource BoolToVisibility}}"
+                            Background="Transparent" ToolTip="{Binding ToolTipText}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="42" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Height="14">
+                            <ProgressBar Style="{StaticResource ThinBar}" Value="{Binding UsedPercent, Mode=OneWay}" Foreground="{Binding Brush}" />
+                            <Grid Visibility="{Binding HasPace, Converter={StaticResource BoolToVisibility}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{Binding ElapsedWidth}" />
+                                    <ColumnDefinition Width="{Binding RemainingWidth}" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="1" Width="2" Margin="-1,0,0,0" HorizontalAlignment="Left"
+                                        Background="{StaticResource Ink}" CornerRadius="1" />
+                            </Grid>
+                        </Grid>
+                        <TextBlock Grid.Column="1" Text="{Binding PercentText}" Foreground="{StaticResource Ink}"
+                                   FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                        <TextBlock Style="{StaticResource SubText}" Margin="0" Text="{Binding SubText}" VerticalAlignment="Center" />
+                        <!-- A level arrow on pace, a rising arrow ahead of pace. -->
+                        <Path Width="12" Height="12" Margin="6,0,0,0" Stretch="Uniform" StrokeThickness="1.6"
+                              Stroke="{Binding PaceBrush}" Fill="Transparent" VerticalAlignment="Center"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                              ToolTip="{Binding PaceText}" AutomationProperties.Name="{Binding PaceText}"
+                              Visibility="{Binding HasPace, Converter={StaticResource BoolToVisibility}}">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Data" Value="M1,6 H11 M8,3 L11,6 L8,9" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAheadOfPace}" Value="True">
+                                            <Setter Property="Data" Value="M1,10 L5,6 L7,8 L11,3 M7,3 H11 V7" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
     </UserControl.Resources>
 
     <Grid>
@@ -180,8 +241,8 @@
                                                                        Visibility="{Binding HasAccountDetail, Converter={StaticResource BoolToVisibility}}" />
                                                         </StackPanel>
 
-                                                        <ContentPresenter Grid.Column="1" Content="{Binding Session}" ContentTemplate="{StaticResource CellTemplate}" VerticalAlignment="Center" />
-                                                        <ContentPresenter Grid.Column="2" Content="{Binding Week}" ContentTemplate="{StaticResource CellTemplate}" VerticalAlignment="Center" />
+                                                        <ContentPresenter Grid.Column="1" Content="{Binding Session}" ContentTemplate="{StaticResource PaceCellTemplate}" VerticalAlignment="Center" />
+                                                        <ContentPresenter Grid.Column="2" Content="{Binding Week}" ContentTemplate="{StaticResource PaceCellTemplate}" VerticalAlignment="Center" />
                                                         <ContentPresenter Grid.Column="3" Content="{Binding Other}" ContentTemplate="{StaticResource CellTemplate}" VerticalAlignment="Center" />
 
                                                         <StackPanel Grid.Column="4" Margin="0,0,14,0" VerticalAlignment="Center"

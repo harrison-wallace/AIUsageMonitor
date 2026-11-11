@@ -10,6 +10,10 @@ which change gets which increment.
 
 ### Changed
 
+- Session and Week bars show a white tick at how much of the 5h session or the 7d week has
+  passed. Below the bar are only the time left and a pace icon: a level arrow on pace, an amber
+  rising arrow when usage is more than 10 points ahead of the time passed. Hover for the words.
+  See `docs/adr/0002-pace-bar-and-minimal-text.md`.
 - The overlay shows provider logos instead of provider names: in the table group headers, on the
   cards, and in the compact and mini strips. Hover a logo for the provider name. Antigravity has
   no logo yet and keeps its name.

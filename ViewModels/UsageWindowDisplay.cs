@@ -57,6 +57,7 @@ public sealed class UsageWindowDisplay
             : usageWindow.ResetAt is { } resetAt
             ? FormatResetText(resetAt)
             : FormatMissingResetText(usageWindow);
+        ResetAt = usageWindow.HideReset ? null : usageWindow.ResetAt;
         ResetShortText = !usageWindow.HideReset && usageWindow.ResetAt is { } shortResetAt
             ? FormatResetShortText(shortResetAt)
             : string.Empty;
@@ -74,6 +75,9 @@ public sealed class UsageWindowDisplay
     }
 
     public string Title { get; }
+
+    // Null when the window has no reset time or hides it.
+    public DateTimeOffset? ResetAt { get; }
 
     public bool IsInactive { get; }
 
