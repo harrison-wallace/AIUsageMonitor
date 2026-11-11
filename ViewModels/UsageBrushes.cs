@@ -3,14 +3,21 @@ using MediaBrush = System.Windows.Media.Brush;
 
 namespace AIUsageMonitor.ViewModels;
 
+// VortexOne colours (vortexone packages/ui/src/styles/tokens.css). Dark only.
 internal static class UsageBrushes
 {
-    private static readonly MediaBrush AnthropicAccent = FrozenBrush("#F59E0B");
-    private static readonly MediaBrush OpenAiAccent = FrozenBrush("#10B981");
-    private static readonly MediaBrush AntigravityAccent = FrozenBrush("#F472B6");
-    private static readonly MediaBrush GeminiAccent = FrozenBrush("#60A5FA");
-    private static readonly MediaBrush CursorAccent = FrozenBrush("#A78BFA");
-    private static readonly MediaBrush DefaultAccent = FrozenBrush("#E5E7EB");
+    public static readonly MediaBrush Canvas = FrozenBrush("#2B2622");
+    public static readonly MediaBrush Ink = FrozenBrush("#F7F5F0");
+    public static readonly MediaBrush Mute = FrozenBrush("#AEA69C");
+    public static readonly MediaBrush CanvasRaised = FrozenBrush("#423C38");
+
+    // Categorical slots in fixed order; colour follows the provider.
+    private static readonly MediaBrush AnthropicAccent = FrozenBrush("#D9663A"); // cat-2
+    private static readonly MediaBrush OpenAiAccent = FrozenBrush("#22A37A"); // cat-3
+    private static readonly MediaBrush AntigravityAccent = FrozenBrush("#D15E8C"); // cat-5
+    private static readonly MediaBrush GeminiAccent = FrozenBrush("#4A8FE0"); // cat-1
+    private static readonly MediaBrush CursorAccent = FrozenBrush("#9085E9"); // cat-7
+    private static readonly MediaBrush DefaultAccent = FrozenBrush("#DAD2C1"); // cat-other
 
     public static MediaBrush ProviderAccent(string providerName)
     {

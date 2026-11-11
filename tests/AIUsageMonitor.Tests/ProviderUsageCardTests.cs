@@ -43,7 +43,7 @@ public sealed class ProviderUsageCardTests
         var card = new ProviderUsageCard(usage);
 
         Assert.AreEqual(100d, card.PrimaryRemainingPercent);
-        Assert.AreEqual("Healthy", card.OverallStatusLabel);
+        Assert.AreEqual("Optimal", card.OverallStatusLabel);
         Assert.AreEqual(0d, card.PrimaryUsedPercent);
         StringAssert.EndsWith(card.SummaryText, " - 0% used");
 
@@ -221,7 +221,7 @@ public sealed class ProviderUsageCardTests
         Assert.AreEqual("Fable", viewModel.Providers[1].ConstrainedShortName);
         Assert.AreEqual("Fable - 100%", viewModel.Providers[1].MiniSummaryText);
         Assert.IsTrue(viewModel.Providers.All(provider => provider.SourceProviderName == "Anthropic"));
-        Assert.AreEqual("Exhausted", viewModel.Providers[1].OverallStatusLabel);
+        Assert.AreEqual("Needs attention", viewModel.Providers[1].OverallStatusLabel);
         Assert.AreEqual(2, viewModel.Providers[1].Windows.Count);
         Assert.AreEqual("$10 of $50", viewModel.Providers[1].Windows.Single(window => window.Title == "Extra usage").ValueText);
 

@@ -10,6 +10,15 @@ which change gets which increment.
 
 ### Changed
 
+- The full-size overlay is now one table: a group per provider, a row per account, and the same
+  columns for every account (Session, Week, Other limits, Credits, Status). **Active / All** hides
+  providers with no usage or no data, and the compact and mini strips follow the same choice.
+  See `docs/adr/0001-overlay-account-table.md`.
+- The overlay uses the VortexOne dark design language: a warm canvas, hairlines, tight corners,
+  and no shadows. Status uses Optimal, Good, Watch, and Needs attention, each with an icon and a
+  label. Balances are neutral text instead of amber.
+- README screenshots are regenerated, and the README shows the Claude sign-in window.
+
 - Adding a Claude account no longer opens a terminal or a browser by itself. A sign-in window shows the
   link with **Copy link**, **Open in <your browser> private window**, and **Open in browser**, then takes
   the code from the sign-in page. An optional email is filled in on the sign-in page.

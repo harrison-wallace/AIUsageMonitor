@@ -51,6 +51,9 @@ public sealed class AppSettings
 
     public bool AlwaysOnTop { get; set; } = true;
 
+    // Active / All on the full-size overlay. False hides providers with no usage or no data.
+    public bool ShowUnusedProviders { get; set; }
+
     public OverlayWindowPlacement OverlayWindowPlacement { get; set; } = new();
 
     public AppSettings Clone()
@@ -76,6 +79,7 @@ public sealed class AppSettings
             AutoRunAtLoginEnabled = AutoRunAtLoginEnabled,
             DiagnosticLoggingEnabled = DiagnosticLoggingEnabled,
             AlwaysOnTop = AlwaysOnTop,
+            ShowUnusedProviders = ShowUnusedProviders,
             OverlayWindowPlacement = OverlayWindowPlacement?.Clone() ?? new OverlayWindowPlacement()
         };
     }

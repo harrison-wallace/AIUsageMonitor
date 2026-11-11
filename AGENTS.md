@@ -193,11 +193,15 @@ sections.
 - `App.OnStartup` shows a message and exits on a startup failure. It must never leave a process
   with no tray icon that holds the single-instance lock.
 - Quota rows and card headlines show percent **used** (`UsageWindowDisplay.ValueText`,
-  `ProviderUsageCard.PrimaryUsedPercent`), derived as 100 minus the remaining percent. Status and
-  colours still come from the remaining percent. Collector-supplied text, such as a balance, is
-  shown as it is. The mini strip omits the word "used" for space.
-- Balance rows (`IsBalance`) stay out of headline quota percentages. All balance rows use the
-  amber `UsageWindowDisplay.IsHighlightedBalance` colour, `#FBBF24`.
+  `ProviderUsageCard.PrimaryUsedPercent`), derived as 100 minus the remaining percent.
+  Collector-supplied text, such as a balance, is shown as it is (`UsageWindowDisplay.HasCustomText`).
+  The mini strip omits the word "used" for space.
+- The UI follows the VortexOne design language (ADR 0001): the tokens are in
+  `ViewModels/UsageBrushes.cs` and `Views/UsageTableView.xaml`. No shadows, no gradients, no pill
+  toggles, 3 to 6 px radii. A status always shows its icon and its label (`UsageStatus`: Optimal
+  below 50% used, Good, Watch from 75%, Needs attention from 90%). Status colours are for state only.
+- Balance rows (`IsBalance`) stay out of headline quota percentages and use neutral text, not a
+  status colour. A balance-only card or row has the status "Balance".
 
 ### Feature index
 
@@ -208,6 +212,7 @@ Read the linked doc before you change the feature.
 | Claude accounts, sign-in, slot identity, account switch | [docs/claude-accounts.md](docs/claude-accounts.md) | The `~/.claude` slot identity is resolved live every refresh. Token and `oauthAccount` block always move together. Sign-in saves nothing until the identity is checked. |
 | OpenAI saved accounts | [docs/openai-accounts.md](docs/openai-accounts.md) | Isolated Codex homes. Never read shared sessions or switch the normal Codex login. |
 | Claude usage credits and website billing | [docs/claude-usage-credits.md](docs/claude-usage-credits.md) | `spend.balance: null` never means zero. Billing reads go through the WebView2 browser, not `HttpClient`. |
+| Overlay account table | [docs/adr/0001-overlay-account-table.md](docs/adr/0001-overlay-account-table.md) | Full size only (`DisplayMode` Full); compact and mini stay cards. `UsageTableBuilder` groups cards by `SourceProviderName`, so a model-group card rejoins its account row. Active / All (`ShowUnusedProviders`, saved in settings) also filters `VisibleProviders` for the strips; when every row is unused, all show. The layout sweep measures the table in Full mode. |
 | ChatGPT purchased credits | `Collectors\CodexCredits.cs` | A credit count, not dollars. Added only when the account holds credits. |
 | Claude subscription credits | `Collectors\ClaudeUsageCredits.cs` | Read `spend.balance`. Never derive it from `monthly_limit - used_credits`. |
 

@@ -458,7 +458,7 @@ public partial class UsageOverlayWindow : Window
 
         if (e.NewValue is UsageOverlayViewModel viewModel)
         {
-            _providersCollection = viewModel.Providers;
+            _providersCollection = viewModel.VisibleProviders;
             _providersCollection.CollectionChanged += ProvidersOnCollectionChanged;
         }
 

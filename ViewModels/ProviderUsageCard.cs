@@ -22,6 +22,8 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
         ConstrainedShortName = GetConstrainedShortName(ShortName, SourceProviderName, usage.AccountLabel);
         Name = FormatDisplayName(ShortName, usage.PlanName);
         Source = usage.Source;
+        PlanName = usage.PlanName?.Trim() ?? string.Empty;
+        AccountLabel = usage.AccountLabel?.Trim() ?? string.Empty;
         StatusMessage = usage.StatusMessage;
         IsUnavailable = usage.IsUnavailable;
         LastCheckedAt = usage.LastCheckedAt;
@@ -44,10 +46,13 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
 
         var status = usage.IsUnavailable || activeWindows.Count == 0
             ? UsageStatus.Unavailable
+            : activeWindows.All(window => window.IsBalance)
+            ? UsageStatus.Balance
             : UsageStatus.FromRemainingPercent(PrimaryRemainingPercent);
         OverallStatusLabel = status.Label;
         OverallStatusBrush = status.Foreground;
         OverallStatusBackground = status.Background;
+        OverallStatusIcon = status.Icon;
         SummaryProgressBrush = status.Foreground;
         IsBalanceOnly = activeWindows.Count > 0 && activeWindows.All(window => window.IsBalance);
         BalanceSummaryText = IsBalanceOnly ? activeWindows[0].ValueText : string.Empty;
@@ -144,6 +149,12 @@ public sealed class ProviderUsageCard : INotifyPropertyChanged
     public MediaBrush OverallStatusBrush { get; }
 
     public MediaBrush OverallStatusBackground { get; }
+
+    public System.Windows.Media.ImageSource OverallStatusIcon { get; }
+
+    public string PlanName { get; }
+
+    public string AccountLabel { get; }
 
     public void SetChecking(bool isChecking)
     {

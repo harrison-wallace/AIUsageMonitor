@@ -2,21 +2,27 @@
 
 Based on [Seth's AI Usage Monitor](https://github.com/SethRobinson/AIUsageMonitor) by Seth A. Robinson (MIT). This copy is rebranded and maintained for personal use.
 
-The overlay changes content density as you resize it instead of simply shrinking the same layout.
+At full size the overlay is one table: a group per provider, a row per account, and the same columns for every account, so you can compare accounts at a glance. **Active** hides providers you are not using (no usage this period, or no data). **All** shows them again. It uses the VortexOne dark design language: a warm canvas, and a status with an icon and a label (Optimal, Good, Watch, Needs attention) instead of colour alone.
 
-![Full detail overlay](docs/screenshot-full.png)
+![Full overlay: the account table](docs/screenshot-full.png)
 
-![Compact summary overlay](docs/screenshot-compact.png)
+Make the window smaller and it changes to compact cards, then to a one-line strip. Both hide unused providers too.
 
-![Tiny strip overlay](docs/screenshot-mini-strip.png)
+![Compact cards](docs/screenshot-compact.png)
+
+![Mini strip](docs/screenshot-mini-strip.png)
 
 Settings let you pick the refresh interval, UI scale, which providers appear, whether the overlay stays always-on-top, and more:
 
 ![Settings dialog](docs/screenshot-settings.png)
 
-Monitor multiple Claude accounts side by side, each with its own overlay card, and switch which account the claude CLI uses with one click:
+Monitor multiple Claude accounts side by side, each with its own row in the table, and switch which account the claude CLI uses with one click:
 
 ![Claude accounts dialog](docs/screenshot-accounts.png)
+
+Adding a Claude account never opens a browser by itself. Copy the sign-in link or open it in a private window, then paste the code. The app checks who signed in before it saves anything:
+
+![Claude sign-in window](docs/screenshot-claude-login.png)
 
 Save multiple OpenAI accounts and monitor them independently of the login currently used by Codex:
 
@@ -52,11 +58,11 @@ This is app was stupid easy to make, so you have a need for it, you undoubtely c
 
 - Always-on-top overlay with percentage used (the same direction as Claude Code's `/usage`), reset times, plan names, and per-provider last checked status.
 - Supports Anthropic, OpenAI/Codex, Antigravity, Gemini, and Cursor local usage checks.
-- Multiple accounts for OpenAI and Anthropic (Claude), each with its own label and usage card. Add and manage accounts in Settings.
-- Claude usage credits: use **Settings > Anthropic > Accounts > Connect usage credits** beside each account, sign into that account on Claude, and select **Connect**. The app verifies the account and organization, then adds its prepaid balance in yellow to its existing card, including the mini strip. Use **Reconnect credits** when the session expires or **Disconnect credits** to remove it. The additional website login is needed when Claude Code's usage response does not expose the balance.
-- The separate Anthropic API Credits card also uses a yellow balance and keeps an **Anthropic API** label on the mini strip. Console/API credits and Claude subscription usage credits remain separate balances.
+- Multiple accounts for OpenAI and Anthropic (Claude), each with its own label and a row under its provider. Add and manage accounts in Settings.
+- Claude usage credits: use **Settings > Anthropic > Accounts > Connect usage credits** beside each account, sign into that account on Claude, and select **Connect**. The app verifies the account and organization, then adds its prepaid balance to that account's Credits column and card, including the mini strip. Use **Reconnect credits** when the session expires or **Disconnect credits** to remove it. The additional website login is needed when Claude Code's usage response does not expose the balance.
+- Anthropic API credits show as an **API credits** row under Anthropic, and keep an **Anthropic API** label on the mini strip. Console/API credits and Claude subscription usage credits remain separate balances.
 - Purchased ChatGPT usage credits show as a "Credits" balance row on the OpenAI card (for saved accounts and the automatic Codex card) so you can see what is left once the plan windows hit 100% used.
-- Small grouped cards keep their account labels, such as `Fable - Seth - 65%` (percent used).
+- A model limit, such as Fable weekly, shows in the **Other limits** column of its account. A money cap such as extra usage shows under **Credits**. In the strips, small grouped cards keep their account labels, such as `Fable - Seth - 65%` (percent used).
 - Tray controls for show/hide, refresh now, settings, logs, and exit.
 - Layout adjusts as you drag the size to fit more or less info, UI scale slider in its Settings
 - Provider errors go to copyable logs and use backoff to avoid hammering services.

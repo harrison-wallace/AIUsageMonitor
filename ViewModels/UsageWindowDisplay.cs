@@ -20,6 +20,7 @@ public sealed class UsageWindowDisplay
         IsBalance = usageWindow.IsBalance;
         IsInactive = usageWindow.IsInactive;
         ShowsProgress = !usageWindow.IsBalance;
+        HasCustomText = !string.IsNullOrWhiteSpace(usageWindow.RemainingText);
 
         if (usageWindow.IsInactive)
         {
@@ -30,11 +31,12 @@ public sealed class UsageWindowDisplay
             LimitText = string.IsNullOrWhiteSpace(usageWindow.Detail) ? "Not on this plan" : usageWindow.Detail;
             ResetText = string.Empty;
             ResetRelativeText = string.Empty;
-            ResetRelativeBrush = UsageBrushes.FrozenBrush("#A8AFBA");
+            ResetRelativeBrush = UsageBrushes.FrozenBrush("#AEA69C");
             StatusLabel = muted.Label;
             StatusBrush = muted.Foreground;
             StatusBackground = muted.Background;
-            ProgressBrush = UsageBrushes.FrozenBrush("#4B5563");
+            StatusIcon = muted.Icon;
+            ProgressBrush = UsageBrushes.FrozenBrush("#423C38");
             ShowsProgress = false;
             return;
         }
@@ -59,10 +61,11 @@ public sealed class UsageWindowDisplay
             : string.Empty;
         ResetRelativeBrush = !usageWindow.HideReset && usageWindow.ResetAt is { } relativeBrushResetAt
             ? ResetRelativeBrushFor(relativeBrushResetAt)
-            : UsageBrushes.FrozenBrush("#A8AFBA");
+            : UsageBrushes.FrozenBrush("#AEA69C");
         StatusLabel = status.Label;
         StatusBrush = status.Foreground;
         StatusBackground = status.Background;
+        StatusIcon = status.Icon;
         ProgressBrush = status.Foreground;
     }
 
@@ -75,6 +78,9 @@ public sealed class UsageWindowDisplay
     public bool IsHighlightedBalance { get; }
 
     public bool ShowsProgress { get; }
+
+    // True when the collector supplied the text (a balance or a money cap), not a percent.
+    public bool HasCustomText { get; }
 
     public double Limit { get; }
 
@@ -103,6 +109,8 @@ public sealed class UsageWindowDisplay
     public MediaBrush StatusBrush { get; }
 
     public MediaBrush StatusBackground { get; }
+
+    public System.Windows.Media.ImageSource StatusIcon { get; }
 
     public MediaBrush ProgressBrush { get; }
 
@@ -142,20 +150,20 @@ public sealed class UsageWindowDisplay
 
         if (remaining.TotalMinutes <= -1)
         {
-            return UsageBrushes.FrozenBrush("#A8AFBA");
+            return UsageBrushes.FrozenBrush("#AEA69C");
         }
 
         if (remaining.TotalMinutes <= 0)
         {
-            return UsageBrushes.FrozenBrush("#FB7185");
+            return UsageBrushes.FrozenBrush("#EF8A7A");
         }
 
         if (remaining.TotalHours <= 2)
         {
-            return UsageBrushes.FrozenBrush("#FBBF24");
+            return UsageBrushes.FrozenBrush("#E5B869");
         }
 
-        return UsageBrushes.FrozenBrush("#93C5FD");
+        return UsageBrushes.FrozenBrush("#8AB4F2");
     }
 
     private static string FormatResetText(DateTimeOffset resetAt)

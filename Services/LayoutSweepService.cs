@@ -272,7 +272,34 @@ internal static class LayoutSweepService
         var outOfBoundsCount = 0;
         var missingContentCount = 0;
 
-        if (panel is not null && panel.Children.Count > 0)
+        var isTable = plan.ChromeMode == OverlayChromeMode.Full;
+        if (isTable)
+        {
+            // The full size shows the account table, not cards (docs/adr/0001-overlay-account-table.md).
+            var table = window.UsageTable;
+            if (sweepCase.Scenario is not "empty")
+            {
+                var rowTexts = EnumerateVisualDescendants(table)
+                    .OfType<TextBlock>()
+                    .Count(text => text.DataContext is UsageTableRow && text.IsVisible && text.ActualWidth > 0 && text.Text.Length > 0);
+                if (!table.IsVisible || table.ActualWidth <= 0 || rowTexts == 0)
+                {
+                    missingContentCount++;
+                }
+                else
+                {
+                    var bounds = GetBoundsRelativeTo(table, window);
+                    if (bounds.Left < -0.5 || bounds.Top < -0.5 ||
+                        bounds.Right > window.ActualWidth + 0.5 || bounds.Bottom > window.ActualHeight + 0.5)
+                    {
+                        outOfBoundsCount++;
+                    }
+                }
+
+                clippingCount += EnumerateVisualDescendants(table).OfType<TextBlock>().Count(IsCriticallyClipped);
+            }
+        }
+        else if (panel is not null && panel.Children.Count > 0)
         {
             var childBounds = panel.Children
                 .OfType<UIElement>()
@@ -336,7 +363,9 @@ internal static class LayoutSweepService
 
         if (outOfBoundsCount > 0)
         {
-            hardIssues.Add($"{outOfBoundsCount} cards extend outside the provider panel.");
+            hardIssues.Add(isTable
+                ? "The account table extends outside the window."
+                : $"{outOfBoundsCount} cards extend outside the provider panel.");
         }
 
         if (rowCoverage < 0.95)
@@ -346,12 +375,15 @@ internal static class LayoutSweepService
 
         if (missingContentCount > 0)
         {
-            hardIssues.Add($"{missingContentCount} provider cards rendered without visible foreground content.");
+            hardIssues.Add(isTable
+                ? "The account table rendered without visible rows."
+                : $"{missingContentCount} provider cards rendered without visible foreground content.");
         }
 
         var medianContentSpan = Median(contentSpans);
         var medianLargestEmptyGap = Median(largestEmptyGapRatios);
-        if (plan.DetailLevel is ProviderCardDetailLevel.Compact or ProviderCardDetailLevel.MiniTall &&
+        if (!isTable &&
+            plan.DetailLevel is ProviderCardDetailLevel.Compact or ProviderCardDetailLevel.MiniTall &&
             plan.SlotHeight >= 120 &&
             sweepCase.Scenario is not "empty" and not "single-unavailable" &&
             medianLargestEmptyGap > 0.45)
@@ -359,7 +391,8 @@ internal static class LayoutSweepService
             hardIssues.Add($"Median largest empty vertical gap was {medianLargestEmptyGap:P0}, above 45%.");
         }
 
-        if (plan.DetailLevel != ProviderCardDetailLevel.Mini &&
+        if (!isTable &&
+            plan.DetailLevel != ProviderCardDetailLevel.Mini &&
             plan.Rows > 0 &&
             sweepCase.Scenario is not "empty" and not "single-unavailable" &&
             medianContentSpan < 0.5)

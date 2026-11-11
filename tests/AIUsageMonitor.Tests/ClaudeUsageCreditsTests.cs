@@ -112,7 +112,7 @@ public sealed class ClaudeUsageCreditsTests
 
         Assert.AreEqual(31, card.PrimaryRemainingPercent);
         Assert.AreEqual("$0.00 credits", card.SecondaryBalanceText);
-        Assert.AreNotEqual("Exhausted", card.OverallStatusLabel);
+        Assert.AreNotEqual("Needs attention", card.OverallStatusLabel);
     }
 
     [TestMethod]

@@ -12,10 +12,72 @@ public sealed class UsageOverlayViewModel : INotifyPropertyChanged
     private string _autoRefreshText = "Auto refresh every 20 minutes";
     private string _logSummaryText = "No recent errors";
     private string _errorMessage = string.Empty;
+    private bool _showUnusedProviders;
+    private string _hiddenProvidersText = string.Empty;
+
+    public UsageOverlayViewModel()
+    {
+        Providers.CollectionChanged += (_, e) =>
+        {
+            foreach (var card in e.OldItems?.OfType<ProviderUsageCard>() ?? [])
+            {
+                card.PropertyChanged -= CardOnPropertyChanged;
+            }
+
+            foreach (var card in e.NewItems?.OfType<ProviderUsageCard>() ?? [])
+            {
+                card.PropertyChanged += CardOnPropertyChanged;
+            }
+
+            RefreshVisibleProviders();
+        };
+    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    // Every card, in collector order. Collectors and checking state update this collection.
     public ObservableCollection<ProviderUsageCard> Providers { get; } = [];
+
+    // The cards the compact and mini strips show: Providers minus unused ones unless
+    // ShowUnusedProviders is on.
+    public ObservableCollection<ProviderUsageCard> VisibleProviders { get; } = [];
+
+    // The full-size table: a group per provider, a row per account.
+    public ObservableCollection<UsageTableGroup> TableGroups { get; } = [];
+
+    public bool ShowUnusedProviders
+    {
+        get => _showUnusedProviders;
+        set
+        {
+            if (SetField(ref _showUnusedProviders, value))
+            {
+                OnPropertyChanged(nameof(ShowActiveProvidersOnly));
+                RefreshVisibleProviders();
+            }
+        }
+    }
+
+    // The "Active" side of the Active / All control.
+    public bool ShowActiveProvidersOnly
+    {
+        get => !_showUnusedProviders;
+        set => ShowUnusedProviders = !value;
+    }
+
+    public string HiddenProvidersText
+    {
+        get => _hiddenProvidersText;
+        private set
+        {
+            if (SetField(ref _hiddenProvidersText, value))
+            {
+                OnPropertyChanged(nameof(HasHiddenProviders));
+            }
+        }
+    }
+
+    public bool HasHiddenProviders => HiddenProvidersText.Length > 0;
 
     public string AppVersionText => AppMetadata.VersionText;
 
@@ -248,6 +310,36 @@ public sealed class UsageOverlayViewModel : INotifyPropertyChanged
         {
             provider.RefreshCheckedText();
         }
+    }
+
+    private void CardOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ProviderUsageCard.IsChecking))
+        {
+            RefreshVisibleProviders();
+        }
+    }
+
+    private void RefreshVisibleProviders()
+    {
+        var table = UsageTableBuilder.Build(Providers, _showUnusedProviders);
+        TableGroups.Clear();
+        foreach (var group in table.Groups)
+        {
+            TableGroups.Add(group);
+        }
+
+        var visible = Providers.Where(card => !table.HiddenSources.Contains(card.SourceProviderName)).ToList();
+        if (!visible.SequenceEqual(VisibleProviders))
+        {
+            VisibleProviders.Clear();
+            foreach (var card in visible)
+            {
+                VisibleProviders.Add(card);
+            }
+        }
+
+        HiddenProvidersText = table.HiddenText;
     }
 
     public void SetError(string message)

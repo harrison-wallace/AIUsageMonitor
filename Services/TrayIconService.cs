@@ -43,6 +43,16 @@ public sealed class TrayIconService : IDisposable
         _appIcon = AppIconService.LoadTrayIcon();
         _settings = _settingsService.Load();
         EnsureClaudeStatusExporterIfEnabled();
+        _viewModel.ShowUnusedProviders = _settings.ShowUnusedProviders;
+        _viewModel.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(UsageOverlayViewModel.ShowUnusedProviders) &&
+                _settings.ShowUnusedProviders != _viewModel.ShowUnusedProviders)
+            {
+                _settings.ShowUnusedProviders = _viewModel.ShowUnusedProviders;
+                SaveSettingsPreservingAccounts();
+            }
+        };
 
         var menu = new WinForms.ContextMenuStrip();
         menu.Items.Add("Show AI Usage Monitor", null, (_, _) => Dispatch(ShowOverlay));

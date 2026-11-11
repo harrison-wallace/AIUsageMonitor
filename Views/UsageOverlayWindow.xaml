@@ -16,11 +16,12 @@
         ShowInTaskbar="False"
         Topmost="True"
         PreviewKeyDown="WindowOnPreviewKeyDown"
+        FontFamily="Segoe UI Variable Text, Segoe UI"
         PreviewMouseLeftButtonDown="WindowOnPreviewMouseLeftButtonDown">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <views:ProviderCardScaleConverter x:Key="ProviderCardScaleConverter" />
-        <SolidColorBrush x:Key="IconGlyphBrush" Color="#E5E7EB" />
+        <SolidColorBrush x:Key="IconGlyphBrush" Color="#F7F5F0" />
         <Pen x:Key="OptionsIconPen"
              Brush="{StaticResource IconGlyphBrush}"
              Thickness="1.6"
@@ -151,10 +152,10 @@
         <Style x:Key="OverlayChromeStyle" TargetType="{x:Type Border}">
             <Setter Property="Margin" Value="18" />
             <Setter Property="Padding" Value="24" />
-            <Setter Property="Background" Value="#FF15171D" />
-            <Setter Property="BorderBrush" Value="#303540" />
+            <Setter Property="Background" Value="#FF2B2622" />
+            <Setter Property="BorderBrush" Value="#3F3A36" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="6" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="Compact">
                     <Setter Property="Margin" Value="4" />
@@ -171,10 +172,10 @@
             <Setter Property="Margin" Value="5" />
             <Setter Property="Padding" Value="18" />
             <Setter Property="MinHeight" Value="190" />
-            <Setter Property="Background" Value="#FF1D2028" />
-            <Setter Property="BorderBrush" Value="#303641" />
+            <Setter Property="Background" Value="#FF383330" />
+            <Setter Property="BorderBrush" Value="#3F3A36" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="4" />
             <Style.Triggers>
                 <!-- The hover popup only adds information when the card is too small to show it all. -->
                 <DataTrigger Binding="{Binding CardDetailLevel, RelativeSource={RelativeSource AncestorType=Window}}" Value="Full">
@@ -203,9 +204,9 @@
             <Setter Property="Height" Value="34" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="6,0,0,0" />
-            <Setter Property="Foreground" Value="#E5E7EB" />
-            <Setter Property="Background" Value="#232733" />
-            <Setter Property="BorderBrush" Value="#343A46" />
+            <Setter Property="Foreground" Value="#F7F5F0" />
+            <Setter Property="Background" Value="#2B2622" />
+            <Setter Property="BorderBrush" Value="#918879" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontSize" Value="15" />
@@ -215,16 +216,16 @@
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8">
+                                CornerRadius="4">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#2F3542" />
+                                <Setter Property="Background" Value="#423C38" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#3B4252" />
+                                <Setter Property="Background" Value="#4A433F" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -247,20 +248,20 @@
         </Style>
 
         <Style x:Key="UsageProgressBarStyle" TargetType="ProgressBar">
-            <Setter Property="Height" Value="9" />
+            <Setter Property="Height" Value="6" />
             <Setter Property="Minimum" Value="0" />
             <Setter Property="Maximum" Value="100" />
-            <Setter Property="Background" Value="#4A5361" />
+            <Setter Property="Background" Value="#423C38" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ProgressBar">
                         <Grid x:Name="PART_Track" ClipToBounds="True">
                             <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="5" />
+                                    CornerRadius="3" />
                             <Border x:Name="PART_Indicator"
                                     HorizontalAlignment="Left"
                                     Background="{TemplateBinding Foreground}"
-                                    CornerRadius="5" />
+                                    CornerRadius="3" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -277,17 +278,10 @@
                     <ControlTemplate TargetType="{x:Type ToolTip}">
                         <Border Margin="8"
                                 Padding="16"
-                                Background="#FF1D2028"
-                                BorderBrush="#4A5361"
+                                Background="#FF383330"
+                                BorderBrush="#423C38"
                                 BorderThickness="1"
-                                CornerRadius="8">
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="14"
-                                                  Direction="270"
-                                                  ShadowDepth="3"
-                                                  Opacity="0.45"
-                                                  Color="#000000" />
-                            </Border.Effect>
+                                CornerRadius="4">
                             <ContentPresenter />
                         </Border>
                     </ControlTemplate>
@@ -298,7 +292,7 @@
         <ControlTemplate x:Key="ResizeThumbTemplate" TargetType="Thumb">
             <Grid Background="#01000000">
                 <Path Data="M 23,7 L 7,23 M 23,13 L 13,23 M 23,19 L 19,23"
-                      Stroke="#8B93A1"
+                      Stroke="#AEA69C"
                       StrokeThickness="1.6"
                       StrokeStartLineCap="Round"
                       StrokeEndLineCap="Round" />
@@ -391,13 +385,6 @@
 
             <Border x:Name="ChromeBorder"
                     Style="{StaticResource OverlayChromeStyle}">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="30"
-                                  Direction="270"
-                                  ShadowDepth="8"
-                                  Opacity="0.42"
-                                  Color="#000000" />
-            </Border.Effect>
 
             <Grid>
                 <Grid>
@@ -419,11 +406,11 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="AI Usage Monitor"
-                                       Foreground="#F9FAFB"
-                                       FontWeight="SemiBold">
+                                       Foreground="#F7F5F0"
+                                       FontWeight="Medium">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
-                                        <Setter Property="FontSize" Value="28" />
+                                        <Setter Property="FontSize" Value="22" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="Compact">
                                                 <Setter Property="FontSize" Value="22" />
@@ -435,20 +422,20 @@
                             <Border Margin="12,3,0,0"
                                     Padding="8,3"
                                     VerticalAlignment="Center"
-                                    Background="#232733"
-                                    BorderBrush="#343A46"
+                                    Background="#2B2622"
+                                    BorderBrush="#918879"
                                     BorderThickness="1"
-                                    CornerRadius="8"
+                                    CornerRadius="4"
                                     Style="{StaticResource FullOnlyElementStyle}">
                                 <TextBlock Text="{Binding AppVersionText}"
-                                           Foreground="#A8AFBA"
+                                           Foreground="#AEA69C"
                                            FontSize="12"
                                            FontWeight="SemiBold" />
                             </Border>
                         </StackPanel>
                         <TextBlock Text="{Binding GeneratedAtText}"
                                    Margin="0,4,0,0"
-                                   Foreground="#A8AFBA"
+                                   Foreground="#AEA69C"
                                    FontSize="13" />
                     </StackPanel>
 
@@ -484,10 +471,10 @@
 
                 <Border Grid.Row="1"
                         Padding="12,10"
-                        Background="#2B1B20"
-                        BorderBrush="#7F1D1D"
+                        Background="#423C38"
+                        BorderBrush="#EF8A7A"
                         BorderThickness="1"
-                        CornerRadius="8">
+                        CornerRadius="4">
                     <Border.Style>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="Margin" Value="0,18,0,0" />
@@ -512,14 +499,33 @@
                         </Style>
                     </Border.Style>
                     <TextBlock Text="{Binding ErrorMessage}"
-                               Foreground="#FCA5A5"
+                               Foreground="#EF8A7A"
                                FontSize="13"
                                TextWrapping="Wrap" />
                 </Border>
 
+                    <views:UsageTableView x:Name="UsageTable"
+                                          Grid.Row="2"
+                                          Margin="0,18,0,0">
+                        <views:UsageTableView.Style>
+                            <Style TargetType="{x:Type views:UsageTableView}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding HasProviders}" Value="True" />
+                                            <Condition Binding="{Binding DisplayMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="Full" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </views:UsageTableView.Style>
+                    </views:UsageTableView>
+
                     <ItemsControl x:Name="ProvidersList"
                                   Grid.Row="2"
-                                  ItemsSource="{Binding Providers}"
+                                  ItemsSource="{Binding VisibleProviders}"
                                   Margin="{Binding ProvidersListMargin, RelativeSource={RelativeSource AncestorType=Window}}"
                                   SizeChanged="ProvidersListOnSizeChanged">
                         <ItemsControl.Style>
@@ -527,6 +533,9 @@
                                 <Setter Property="Visibility" Value="Visible" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding HasProviders}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="Full">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -564,7 +573,7 @@
                                                     <TextBlock Grid.Column="1"
                                                                Text="{Binding Name}"
                                                                Margin="0,0,12,0"
-                                                               Foreground="#F3F4F6"
+                                                               Foreground="#F7F5F0"
                                                                FontSize="16"
                                                                FontWeight="SemiBold"
                                                                TextWrapping="Wrap"
@@ -575,7 +584,7 @@
                                                         <Border Padding="9,4"
                                                                 HorizontalAlignment="Right"
                                                                 Background="{Binding OverallStatusBackground}"
-                                                                CornerRadius="8">
+                                                                CornerRadius="4">
                                                             <TextBlock Text="{Binding OverallStatusLabel}"
                                                                        Foreground="{Binding OverallStatusBrush}"
                                                                        FontSize="12"
@@ -583,7 +592,7 @@
                                                         </Border>
                                                         <TextBlock Margin="0,6,0,0"
                                                                    Text="{Binding CheckedText}"
-                                                                   Foreground="#8B93A1"
+                                                                   Foreground="#AEA69C"
                                                                    FontSize="11"
                                                                    HorizontalAlignment="Right" />
                                                     </StackPanel>
@@ -591,7 +600,7 @@
 
                                                 <TextBlock Text="{Binding StatusMessage}"
                                                            Margin="0,12,0,0"
-                                                           Foreground="#A8AFBA"
+                                                           Foreground="#AEA69C"
                                                            FontSize="13"
                                                            TextWrapping="Wrap"
                                                            Visibility="{Binding IsUnavailable, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -607,7 +616,7 @@
                                                                         <ColumnDefinition Width="Auto" />
                                                                     </Grid.ColumnDefinitions>
                                                                     <TextBlock Text="{Binding Title}"
-                                                                               Foreground="#D6DAE1"
+                                                                               Foreground="#DAD2C1"
                                                                                FontSize="13"
                                                                                FontWeight="SemiBold" />
                                                                     <TextBlock Grid.Column="1"
@@ -617,10 +626,10 @@
                                                                                FontWeight="SemiBold">
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="{x:Type TextBlock}">
-                                                                            <Setter Property="Foreground" Value="#F9FAFB" />
+                                                                            <Setter Property="Foreground" Value="#F7F5F0" />
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding IsHighlightedBalance}" Value="True">
-                                                                                    <Setter Property="Foreground" Value="#FBBF24" />
+                                                                                    <Setter Property="Foreground" Value="#DAD2C1" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
@@ -651,7 +660,7 @@
                                                                     </Grid.ColumnDefinitions>
                                                                     <TextBlock Text="{Binding LimitText}"
                                                                                Margin="0,0,12,0"
-                                                                               Foreground="#A8AFBA"
+                                                                               Foreground="#AEA69C"
                                                                                FontSize="12"
                                                                                TextWrapping="Wrap" />
                                                                     <StackPanel Grid.Column="1"
@@ -664,7 +673,7 @@
                                                                                    FontWeight="SemiBold" />
                                                                         <TextBlock Text="{Binding ResetText}"
                                                                                    Margin="10,0,0,0"
-                                                                                   Foreground="#A8AFBA"
+                                                                                   Foreground="#AEA69C"
                                                                                    FontSize="12" />
                                                                     </StackPanel>
                                                                 </Grid>
@@ -719,7 +728,7 @@
                                                 <TextBlock Grid.Column="1"
                                                            Text="{Binding Name}"
                                                            Margin="0,0,12,0"
-                                                           Foreground="#F3F4F6"
+                                                           Foreground="#F7F5F0"
                                                            FontSize="18"
                                                            FontWeight="SemiBold"
                                                            TextTrimming="CharacterEllipsis"
@@ -728,7 +737,7 @@
                                                             HorizontalAlignment="Right">
                                                     <Border Padding="9,4"
                                                             Background="{Binding OverallStatusBackground}"
-                                                            CornerRadius="8">
+                                                            CornerRadius="4">
                                                         <TextBlock Text="{Binding OverallStatusLabel}"
                                                                    Foreground="{Binding OverallStatusBrush}"
                                                                    FontSize="12"
@@ -736,7 +745,7 @@
                                                     </Border>
                                                     <TextBlock Margin="0,6,0,0"
                                                                Text="{Binding CheckedText}"
-                                                               Foreground="#8B93A1"
+                                                               Foreground="#AEA69C"
                                                                FontSize="11"
                                                                HorizontalAlignment="Right" />
                                                 </StackPanel>
@@ -744,7 +753,7 @@
 
                                             <TextBlock Text="{Binding StatusMessage}"
                                                        Margin="0,16,0,0"
-                                                       Foreground="#A8AFBA"
+                                                       Foreground="#AEA69C"
                                                        FontSize="13"
                                                        TextWrapping="Wrap"
                                                        Visibility="{Binding IsUnavailable, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -760,7 +769,7 @@
                                                                     <ColumnDefinition Width="Auto" />
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Text="{Binding Title}"
-                                                                           Foreground="#D6DAE1"
+                                                                           Foreground="#DAD2C1"
                                                                            FontSize="14"
                                                                            FontWeight="SemiBold" />
                                                                 <TextBlock Grid.Column="1"
@@ -769,10 +778,10 @@
                                                                            FontWeight="SemiBold">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="{x:Type TextBlock}">
-                                                                        <Setter Property="Foreground" Value="#F9FAFB" />
+                                                                        <Setter Property="Foreground" Value="#F7F5F0" />
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding IsHighlightedBalance}" Value="True">
-                                                                                <Setter Property="Foreground" Value="#FBBF24" />
+                                                                                <Setter Property="Foreground" Value="#DAD2C1" />
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
@@ -803,7 +812,7 @@
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Text="{Binding LimitText}"
                                                                            Margin="0,0,12,0"
-                                                                           Foreground="#A8AFBA"
+                                                                           Foreground="#AEA69C"
                                                                            FontSize="12"
                                                                            TextTrimming="CharacterEllipsis" />
                                                                 <StackPanel Grid.Column="1"
@@ -815,7 +824,7 @@
                                                                                FontWeight="SemiBold" />
                                                                     <TextBlock Text="{Binding ResetText}"
                                                                                Margin="10,0,0,0"
-                                                                               Foreground="#A8AFBA"
+                                                                               Foreground="#AEA69C"
                                                                                FontSize="12" />
                                                                 </StackPanel>
                                                             </Grid>
@@ -837,7 +846,7 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding CompactSummaryText}"
-                                                           Foreground="#F3F4F6"
+                                                           Foreground="#F7F5F0"
                                                            FontSize="15"
                                                            FontWeight="SemiBold"
                                                            TextTrimming="CharacterEllipsis"
@@ -874,7 +883,7 @@
                                                                 <ColumnDefinition Width="Auto" />
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Text="{Binding Title}"
-                                                                       Foreground="#A8AFBA"
+                                                                       Foreground="#AEA69C"
                                                                        FontSize="11"
                                                                        MaxWidth="130"
                                                                        MinWidth="58"
@@ -912,10 +921,10 @@
                                                                        VerticalAlignment="Center">
                                                             <TextBlock.Style>
                                                                 <Style TargetType="{x:Type TextBlock}">
-                                                                    <Setter Property="Foreground" Value="#D6DAE1" />
+                                                                    <Setter Property="Foreground" Value="#DAD2C1" />
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding IsHighlightedBalance}" Value="True">
-                                                                            <Setter Property="Foreground" Value="#FBBF24" />
+                                                                            <Setter Property="Foreground" Value="#DAD2C1" />
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
@@ -935,7 +944,7 @@
                                             </Grid.RowDefinitions>
                                             <TextBlock Grid.Row="0"
                                                        Text="{Binding MiniSummaryText}"
-                                                       Foreground="#F3F4F6"
+                                                       Foreground="#F7F5F0"
                                                        FontSize="12"
                                                        FontWeight="SemiBold"
                                                        TextTrimming="CharacterEllipsis" />
@@ -976,13 +985,13 @@
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="{x:Type TextBlock}">
                                                                             <Setter Property="Text" Value="{Binding Title}" />
-                                                                            <Setter Property="Foreground" Value="#A8AFBA" />
+                                                                            <Setter Property="Foreground" Value="#AEA69C" />
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding IsBalance}" Value="True">
                                                                                     <Setter Property="Text" Value="{Binding ValueText}" />
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding IsHighlightedBalance}" Value="True">
-                                                                                    <Setter Property="Foreground" Value="#FBBF24" />
+                                                                                    <Setter Property="Foreground" Value="#DAD2C1" />
                                                                                     <Setter Property="FontWeight" Value="SemiBold" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
@@ -1011,14 +1020,14 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding MiniSummaryText}"
-                                                           Foreground="#F3F4F6"
+                                                           Foreground="#F7F5F0"
                                                            FontSize="12"
                                                            FontWeight="SemiBold"
                                                            TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Grid.Column="1"
                                                            Margin="8,0,0,0"
                                                            Text="{Binding SecondaryBalanceText}"
-                                                           Foreground="#FBBF24"
+                                                           Foreground="#DAD2C1"
                                                            FontSize="10"
                                                            FontWeight="SemiBold"
                                                            VerticalAlignment="Bottom"
@@ -1047,10 +1056,10 @@
                     </ItemsControl>
 
                 <Border Grid.Row="2"
-                        Background="#1D2028"
-                        BorderBrush="#303641"
+                        Background="#383330"
+                        BorderBrush="#3F3A36"
                         BorderThickness="1"
-                        CornerRadius="8">
+                        CornerRadius="4">
                     <Border.Style>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="Visibility" Value="Collapsed" />
@@ -1072,7 +1081,7 @@
                         </Style>
                     </Border.Style>
                     <TextBlock Text="No providers enabled. Open Settings to enable one."
-                               Foreground="#A8AFBA"
+                               Foreground="#AEA69C"
                                FontSize="13"
                                TextWrapping="Wrap" />
                 </Border>
@@ -1088,12 +1097,12 @@
                     <TextBlock Grid.Column="1"
                                Margin="16,0,0,0"
                                Text="{Binding LogSummaryText}"
-                               Foreground="#6B7280"
+                               Foreground="#AEA69C"
                                FontSize="11" />
                     <TextBlock Grid.Column="2"
                                Margin="16,0,0,0"
                                Text="{Binding AutoRefreshText}"
-                               Foreground="#6B7280"
+                               Foreground="#AEA69C"
                                FontSize="11" />
                 </Grid>
                 </Grid>
