@@ -8,12 +8,12 @@
         MinHeight="420"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
     <Border Padding="22"
-            Background="#15171D">
+            Background="#2B2622">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -26,18 +26,18 @@
             <TextBlock Text="Claude Accounts"
                        FontSize="20"
                        FontWeight="SemiBold"
-                       Foreground="#F9FAFB" />
+                       Foreground="#F7F5F0" />
 
             <StackPanel Grid.Row="1">
                 <TextBlock Margin="0,10,0,0"
                            TextWrapping="Wrap"
-                           Foreground="#8B93A1"
+                           Foreground="#AEA69C"
                            FontSize="12"
                            Text="Each account gets its own card in the overlay. Adding an account shows a sign-in link you can copy or open in a private window, then asks for the code from the sign-in page. Adding an account never changes which account the CLI itself uses. Only 'Switch CLI to this' does that, and the login you switch away from is kept as its own entry so you can switch back." />
                 <TextBlock x:Name="ActiveAccountTextBlock"
                            Margin="0,10,0,0"
                            TextWrapping="Wrap"
-                           Foreground="#D6DAE1"
+                           Foreground="#DAD2C1"
                            FontSize="12"
                            FontWeight="SemiBold"
                            Text="Active claude CLI account: checking..." />
@@ -53,7 +53,7 @@
                         Margin="0,12,0,0">
                 <TextBlock x:Name="StatusTextBlock"
                            TextWrapping="Wrap"
-                           Foreground="#A8AFBA"
+                           Foreground="#AEA69C"
                            FontSize="12" />
             </StackPanel>
 

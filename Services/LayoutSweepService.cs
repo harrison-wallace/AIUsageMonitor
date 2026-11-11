@@ -496,7 +496,7 @@ internal static class LayoutSweepService
             using (var drawing = visual.RenderOpen())
             {
                 drawing.DrawRectangle(
-                    new SolidColorBrush(WpfColor.FromRgb(15, 17, 22)),
+                    new SolidColorBrush(WpfColor.FromRgb(0x2B, 0x26, 0x22)),
                     null,
                     new WpfRect(0, 0, cellWidth * ContactSheetColumns, cellHeight * ContactSheetRows));
                 for (var index = 0; index < page.Count; index++)

@@ -31,6 +31,7 @@ public sealed class UsageWindowDisplay
             LimitText = string.IsNullOrWhiteSpace(usageWindow.Detail) ? "Not on this plan" : usageWindow.Detail;
             ResetText = string.Empty;
             ResetRelativeText = string.Empty;
+            ResetShortText = string.Empty;
             ResetRelativeBrush = UsageBrushes.FrozenBrush("#AEA69C");
             StatusLabel = muted.Label;
             StatusBrush = muted.Foreground;
@@ -56,6 +57,9 @@ public sealed class UsageWindowDisplay
             : usageWindow.ResetAt is { } resetAt
             ? FormatResetText(resetAt)
             : FormatMissingResetText(usageWindow);
+        ResetShortText = !usageWindow.HideReset && usageWindow.ResetAt is { } shortResetAt
+            ? FormatResetShortText(shortResetAt)
+            : string.Empty;
         ResetRelativeText = !usageWindow.HideReset && usageWindow.ResetAt is { } relativeResetAt
             ? FormatResetRelativeText(relativeResetAt)
             : string.Empty;
@@ -100,6 +104,9 @@ public sealed class UsageWindowDisplay
 
     public string ResetRelativeText { get; }
 
+    // Time to the reset in a few characters, for the table: "35m", "4h", "2d", "now".
+    public string ResetShortText { get; }
+
     public MediaBrush ResetRelativeBrush { get; }
 
     public string Detail { get; }
@@ -113,6 +120,29 @@ public sealed class UsageWindowDisplay
     public System.Windows.Media.ImageSource StatusIcon { get; }
 
     public MediaBrush ProgressBrush { get; }
+
+    internal static string FormatResetShortText(DateTimeOffset resetAt, DateTimeOffset? now = null)
+    {
+        var remaining = resetAt - (now ?? DateTimeOffset.Now);
+        if (remaining.TotalMinutes <= -1)
+        {
+            return "passed";
+        }
+
+        if (remaining.TotalMinutes < 1)
+        {
+            return "now";
+        }
+
+        if (remaining.TotalMinutes < 90)
+        {
+            return $"{Math.Max(1, (int)Math.Round(remaining.TotalMinutes))}m";
+        }
+
+        return remaining.TotalHours < 36
+            ? $"{Math.Max(1, (int)Math.Round(remaining.TotalHours))}h"
+            : $"{Math.Max(1, (int)Math.Round(remaining.TotalDays))}d";
+    }
 
     private static string FormatResetRelativeText(DateTimeOffset resetAt)
     {

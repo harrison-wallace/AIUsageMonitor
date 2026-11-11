@@ -9,6 +9,19 @@ public partial class App : System.Windows.Application
     private SingleInstanceCoordinator? _singleInstanceCoordinator;
     private AppLogService? _logService;
 
+    // Every window, and everything in it, uses the bundled Inter unless it sets its own font.
+    // This must run before the first window is created.
+    static App()
+    {
+        // Touching PackUriHelper registers the pack:// scheme, which is not registered yet here.
+        _ = System.IO.Packaging.PackUriHelper.UriSchemePack;
+        var inter = new System.Windows.Media.FontFamily(
+            new Uri("pack://application:,,,/AIUsageMonitor;component/"), "./Assets/Fonts/#Inter");
+        System.Windows.Controls.Control.FontFamilyProperty.OverrideMetadata(
+            typeof(System.Windows.Window),
+            new System.Windows.FrameworkPropertyMetadata(inter, System.Windows.FrameworkPropertyMetadataOptions.Inherits));
+    }
+
     protected override void OnStartup(System.Windows.StartupEventArgs e)
     {
         base.OnStartup(e);

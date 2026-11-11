@@ -6,11 +6,11 @@
         Width="1100"
         Height="820"
         WindowStartupLocation="CenterOwner"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
-    <Grid Background="#15171D">
+    <Grid Background="#2B2622">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -20,12 +20,12 @@
 
         <StackPanel Margin="16,14,16,10">
             <TextBlock Text="Log into Anthropic Console billing, then save the Console login."
-                       Foreground="#D6DAE1"
+                       Foreground="#DAD2C1"
                        FontSize="13"
                        FontWeight="SemiBold" />
             <TextBlock Margin="0,5,0,0"
                        Text="This reads the same prepaid API credit balance shown in Console billing. Anthropic does not document this balance endpoint, so re-saving may be needed if Console changes."
-                       Foreground="#8B93A1"
+                       Foreground="#AEA69C"
                        FontSize="12"
                        TextWrapping="Wrap" />
         </StackPanel>
@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Text="Org UUID fallback"
-                       Foreground="#A8AFBA"
+                       Foreground="#AEA69C"
                        FontSize="12"
                        VerticalAlignment="Center" />
             <TextBox x:Name="OrganizationUuidTextBox"
@@ -47,15 +47,15 @@
                      Margin="10,0,0,0"
                      Padding="8,4"
                      VerticalContentAlignment="Center"
-                     Background="#1D2028"
-                     BorderBrush="#343A46"
-                     Foreground="#F9FAFB"
-                     CaretBrush="#F9FAFB"
+                     Background="#383330"
+                     BorderBrush="#918879"
+                     Foreground="#F7F5F0"
+                     CaretBrush="#F7F5F0"
                      FontSize="12" />
             <TextBlock Grid.Column="2"
                        Margin="10,0,0,0"
                        Text="Optional. Use only if automatic organization discovery fails."
-                       Foreground="#6B7280"
+                       Foreground="#AEA69C"
                        FontSize="12"
                        VerticalAlignment="Center"
                        TextWrapping="Wrap" />
@@ -63,7 +63,7 @@
 
         <Border Grid.Row="2"
                 Margin="16,0"
-                BorderBrush="#343A46"
+                BorderBrush="#918879"
                 BorderThickness="1">
             <wv2:WebView2 x:Name="ConsoleWebView" />
         </Border>
@@ -78,7 +78,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="StatusTextBlock"
-                       Foreground="#8B93A1"
+                       Foreground="#AEA69C"
                        FontSize="12"
                        TextWrapping="Wrap"
                        VerticalAlignment="Center" />

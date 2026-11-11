@@ -6,11 +6,11 @@
         Width="1100"
         Height="760"
         WindowStartupLocation="CenterOwner"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
-    <Grid Background="#15171D">
+    <Grid Background="#2B2622">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -19,14 +19,14 @@
 
         <DockPanel Margin="16,14,16,12">
             <TextBlock Text="Log into Cursor, open the usage dashboard, then save the dashboard login."
-                       Foreground="#D6DAE1"
+                       Foreground="#DAD2C1"
                        FontSize="13"
                        VerticalAlignment="Center" />
         </DockPanel>
 
         <Border Grid.Row="1"
                 Margin="16,0"
-                BorderBrush="#343A46"
+                BorderBrush="#918879"
                 BorderThickness="1">
             <wv2:WebView2 x:Name="DashboardWebView" />
         </Border>
@@ -40,7 +40,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="StatusTextBlock"
-                       Foreground="#8B93A1"
+                       Foreground="#AEA69C"
                        FontSize="12"
                        TextWrapping="Wrap"
                        VerticalAlignment="Center" />

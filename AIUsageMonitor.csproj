@@ -26,6 +26,8 @@
     <RuntimeHostConfigurationOption Include="Switch.System.Windows.Input.Stylus.DisableStylusAndTouchSupport" Value="true" Trim="false" />
 
     <Resource Include="Assets\AppIcon.ico" />
+    <!-- Inter and DM Mono, SIL OFL 1.1 (Assets/Fonts/*-OFL.txt, THIRD_PARTY_NOTICES.md). -->
+    <Resource Include="Assets\Fonts\*.ttf" />
 
     <None Update="usage.fake.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

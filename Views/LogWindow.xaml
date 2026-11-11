@@ -5,12 +5,12 @@
         Width="760"
         Height="460"
         WindowStartupLocation="CenterOwner"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
     <Border Padding="18"
-            Background="#15171D">
+            Background="#2B2622">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -28,7 +28,7 @@
                 <TextBlock Text="Logs"
                            FontSize="22"
                            FontWeight="SemiBold"
-                           Foreground="#F9FAFB" />
+                           Foreground="#F7F5F0" />
                 <Button Grid.Column="1"
                         MinWidth="112"
                         Height="32"
@@ -64,22 +64,22 @@
                       SelectionUnit="FullRow"
                       ClipboardCopyMode="IncludeHeader"
                       GridLinesVisibility="Horizontal"
-                      Background="#1D2028"
-                      Foreground="#F9FAFB"
-                      BorderBrush="#343A46"
-                      RowBackground="#1D2028"
-                      AlternatingRowBackground="#222631">
+                      Background="#383330"
+                      Foreground="#F7F5F0"
+                      BorderBrush="#918879"
+                      RowBackground="#383330"
+                      AlternatingRowBackground="#383330">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="#252A33" />
-                        <Setter Property="Foreground" Value="#F9FAFB" />
+                        <Setter Property="Background" Value="#383330" />
+                        <Setter Property="Foreground" Value="#F7F5F0" />
                         <Setter Property="FontWeight" Value="SemiBold" />
                         <Setter Property="Padding" Value="10,7" />
                         <Setter Property="HorizontalContentAlignment" Value="Left" />
                         <Setter Property="VerticalContentAlignment" Value="Center" />
-                        <Setter Property="BorderBrush" Value="#343A46" />
+                        <Setter Property="BorderBrush" Value="#918879" />
                         <Setter Property="BorderThickness" Value="0,0,1,1" />
-                        <Setter Property="SeparatorBrush" Value="#343A46" />
+                        <Setter Property="SeparatorBrush" Value="#918879" />
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
                 <DataGrid.Columns>
@@ -100,7 +100,7 @@
 
             <TextBlock x:Name="LogPathTextBlock"
                        Grid.Row="2"
-                       Foreground="#8B93A1"
+                       Foreground="#AEA69C"
                        FontSize="12"
                        TextTrimming="CharacterEllipsis" />
         </Grid>

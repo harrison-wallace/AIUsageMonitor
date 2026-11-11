@@ -16,7 +16,6 @@
         ShowInTaskbar="False"
         Topmost="True"
         PreviewKeyDown="WindowOnPreviewKeyDown"
-        FontFamily="Segoe UI Variable Text, Segoe UI"
         PreviewMouseLeftButtonDown="WindowOnPreviewMouseLeftButtonDown">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -252,20 +251,7 @@
             <Setter Property="Minimum" Value="0" />
             <Setter Property="Maximum" Value="100" />
             <Setter Property="Background" Value="#423C38" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ProgressBar">
-                        <Grid x:Name="PART_Track" ClipToBounds="True">
-                            <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="3" />
-                            <Border x:Name="PART_Indicator"
-                                    HorizontalAlignment="Left"
-                                    Background="{TemplateBinding Foreground}"
-                                    CornerRadius="3" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Template" Value="{StaticResource UsageBarTemplate}" />
         </Style>
 
         <Style x:Key="ProviderCardToolTipStyle" TargetType="{x:Type ToolTip}">
@@ -667,7 +653,7 @@
                                                                                 Orientation="Horizontal"
                                                                                 HorizontalAlignment="Right"
                                                                                 VerticalAlignment="Top">
-                                                                        <TextBlock Text="{Binding ResetRelativeText}"
+                                                                        <TextBlock Text="{Binding ResetShortText}"
                                                                                    Foreground="{Binding ResetRelativeBrush}"
                                                                                    FontSize="12"
                                                                                    FontWeight="SemiBold" />
@@ -818,7 +804,7 @@
                                                                 <StackPanel Grid.Column="1"
                                                                             Orientation="Horizontal"
                                                                             HorizontalAlignment="Right">
-                                                                    <TextBlock Text="{Binding ResetRelativeText}"
+                                                                    <TextBlock Text="{Binding ResetShortText}"
                                                                                Foreground="{Binding ResetRelativeBrush}"
                                                                                FontSize="12"
                                                                                FontWeight="SemiBold" />
@@ -908,7 +894,7 @@
                                                             </ProgressBar>
                                                             <TextBlock Grid.Column="2"
                                                                        Margin="8,0,0,0"
-                                                                       Text="{Binding ResetRelativeText}"
+                                                                       Text="{Binding ResetShortText}"
                                                                        Foreground="{Binding ResetRelativeBrush}"
                                                                        FontSize="11"
                                                                        FontWeight="SemiBold"
@@ -1000,7 +986,7 @@
                                                                 </TextBlock>
                                                                 <TextBlock Grid.Column="1"
                                                                            Margin="8,0,0,0"
-                                                                           Text="{Binding ResetRelativeText}"
+                                                                           Text="{Binding ResetShortText}"
                                                                            Foreground="{Binding ResetRelativeBrush}"
                                                                            FontSize="10"
                                                                            FontWeight="SemiBold"

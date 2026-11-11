@@ -27,7 +27,8 @@ public sealed class UsageTableTests
         Assert.AreEqual("12%", row.Week.PercentText);
         Assert.AreEqual("65%", row.Other.PercentText);
         StringAssert.StartsWith(row.Other.SubText, "Fable");
-        Assert.AreEqual("$113.85 credits", row.CreditsText);
+        Assert.AreEqual("$113.85", row.CreditsText, "The column header already says Credits.");
+        Assert.IsTrue(viewModel.HasCreditsColumn);
         Assert.AreEqual("Extra usage $10 of $50", row.CreditsDetailText);
         Assert.AreEqual("Good", row.StatusLabel, "65% used is Good on the VortexOne scale.");
     }
@@ -91,6 +92,40 @@ public sealed class UsageTableTests
 
         Assert.HasCount(2, viewModel.TableGroups);
         Assert.IsTrue(viewModel.TableGroups.SelectMany(group => group.Rows).All(row => row.StatusLabel == "Checking"));
+    }
+
+    [TestMethod]
+    public void CreditsColumnCollapsesWhenNoShownAccountHasCredits()
+    {
+        var viewModel = new UsageOverlayViewModel();
+        viewModel.ApplyProvider(Usage("OpenAI - Work", "Work", "Plus", Window("5h", 65), Window("7d", 20)));
+
+        Assert.IsFalse(viewModel.HasCreditsColumn);
+        Assert.AreEqual(string.Empty, viewModel.TableGroups.Single().Rows.Single().CreditsText);
+    }
+
+    [TestMethod]
+    [DataRow(30, "30m")]
+    [DataRow(240, "4h")]
+    [DataRow(60 * 30, "30h")]
+    [DataRow(60 * 24 * 3, "3d")]
+    [DataRow(0.5, "now")]
+    [DataRow(-5, "passed")]
+    public void ResetTimesAreShort(double minutesAhead, string expected)
+    {
+        var now = DateTimeOffset.Now;
+        Assert.AreEqual(expected, UsageWindowDisplay.FormatResetShortText(now.AddMinutes(minutesAhead), now));
+    }
+
+    [TestMethod]
+    public void CellsCarryTheFullResetInTheirToolTip()
+    {
+        var viewModel = new UsageOverlayViewModel();
+        viewModel.ApplyProvider(Usage("OpenAI - Work", "Work", "Plus", Window("5h", 65)));
+
+        var session = viewModel.TableGroups.Single().Rows.Single().Session;
+        Assert.AreEqual("3h", session.SubText);
+        StringAssert.StartsWith(session.ToolTipText, "5h: 65% used. Resets ");
     }
 
     [TestMethod]

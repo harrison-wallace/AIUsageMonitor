@@ -6,9 +6,9 @@ namespace AIUsageMonitor.ViewModels;
 
 // The full-size overlay is one table: a group per provider, a row per account, and the same
 // columns for every account (docs/adr/0001-overlay-account-table.md).
-public sealed record UsageTableCell(double UsedPercent, string PercentText, string SubText, MediaBrush Brush)
+public sealed record UsageTableCell(double UsedPercent, string PercentText, string SubText, MediaBrush Brush, string ToolTipText)
 {
-    public static readonly UsageTableCell Empty = new(0, string.Empty, string.Empty, UsageBrushes.Mute);
+    public static readonly UsageTableCell Empty = new(0, string.Empty, string.Empty, UsageBrushes.Mute, string.Empty);
 
     public bool HasValue => PercentText.Length > 0;
 }
@@ -39,7 +39,8 @@ public sealed record UsageTableGroup(string ProviderName, IReadOnlyList<UsageTab
     public string Eyebrow => ProviderName.ToUpperInvariant();
 }
 
-public sealed record UsageTable(IReadOnlyList<UsageTableGroup> Groups, IReadOnlySet<string> HiddenSources, string HiddenText);
+// HasCredits is false when no shown row has a balance or a money cap; the column then collapses.
+public sealed record UsageTable(IReadOnlyList<UsageTableGroup> Groups, IReadOnlySet<string> HiddenSources, string HiddenText, bool HasCredits);
 
 public static class UsageTableBuilder
 {
@@ -69,7 +70,8 @@ public static class UsageTableBuilder
         return new UsageTable(
             groups,
             hidden.Select(row => row.SourceProviderName).ToHashSet(StringComparer.OrdinalIgnoreCase),
-            hiddenText);
+            hiddenText,
+            groups.SelectMany(group => group.Rows).Any(row => row.CreditsText.Length > 0 || row.CreditsDetailText.Length > 0));
     }
 
     // "Anthropic - Work" -> "Anthropic"; "Anthropic API Credits" -> "Anthropic".
@@ -120,12 +122,12 @@ public static class UsageTableBuilder
             Cell(session, includeTitle: false),
             Cell(week, includeTitle: false),
             others.Count == 0 ? UsageTableCell.Empty : Cell(others[0], includeTitle: true, more: others.Count - 1),
-            string.Join(" · ", balances.Select(window => window.ValueText)),
+            string.Join(" · ", balances.Select(window => TrimCreditsWord(window.ValueText))),
             string.Join(" · ", moneyCaps.Select(window => $"{window.Title} {window.ValueText}")),
             isChecking ? Checking : status.Label,
             isChecking ? UsageBrushes.Mute : status.Foreground,
             isChecking ? UsageStatus.Unavailable.Icon : status.Icon,
-            first.StatusMessage,
+            StatusToolTip(isChecking ? Checking : status.Label, first.StatusMessage),
             isUnused,
             isUnavailable && !isChecking);
     }
@@ -143,17 +145,28 @@ public static class UsageTableBuilder
             parts.Add(more > 0 ? $"{window.Title} +{more}" : window.Title);
         }
 
-        if (window.ResetRelativeText.Length > 0)
+        if (window.ResetShortText.Length > 0)
         {
-            parts.Add(window.ResetRelativeText);
+            parts.Add(window.ResetShortText);
         }
 
+        var resetDetail = window.ResetText.Length > 0 && window.ResetRelativeText.Length > 0
+            ? $"{window.ResetText} ({window.ResetRelativeText})"
+            : window.ResetText;
         return new UsageTableCell(
             window.UsedPercent,
             $"{window.UsedPercent:0}%",
             string.Join(" · ", parts),
-            UsageStatus.FromUsedPercent(window.UsedPercent).Foreground);
+            UsageStatus.FromUsedPercent(window.UsedPercent).Foreground,
+            resetDetail.Length > 0 ? $"{window.Title}: {window.UsedPercent:0}% used. {resetDetail}." : $"{window.Title}: {window.UsedPercent:0}% used.");
     }
+
+    // The column header already says Credits: "$113.85 credits" -> "$113.85".
+    internal static string TrimCreditsWord(string text) =>
+        text.EndsWith(" credits", StringComparison.OrdinalIgnoreCase) ? text[..^8] : text;
+
+    private static string StatusToolTip(string label, string message) =>
+        string.IsNullOrWhiteSpace(message) ? label : $"{label}. {message}";
 
     private static string AccountText(IReadOnlyList<ProviderUsageCard> cards, string source)
     {

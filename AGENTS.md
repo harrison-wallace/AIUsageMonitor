@@ -196,10 +196,16 @@ sections.
   `ProviderUsageCard.PrimaryUsedPercent`), derived as 100 minus the remaining percent.
   Collector-supplied text, such as a balance, is shown as it is (`UsageWindowDisplay.HasCustomText`).
   The mini strip omits the word "used" for space.
-- The UI follows the VortexOne design language (ADR 0001): the tokens are in
-  `ViewModels/UsageBrushes.cs` and `Views/UsageTableView.xaml`. No shadows, no gradients, no pill
-  toggles, 3 to 6 px radii. A status always shows its icon and its label (`UsageStatus`: Optimal
-  below 50% used, Good, Watch from 75%, Needs attention from 90%). Status colours are for state only.
+- The UI follows the VortexOne design language (ADR 0001). Tokens, the bundled fonts, the usage
+  bar gradient, and dark default styles for every standard control are in `App.xaml`, so a new
+  dialog is styled by default; do not hard-code the old palette. `UsageBrushes.cs` holds the C#
+  copies. No shadows, no pill toggles, 3 to 6 px radii. Owner exceptions: usage bars use
+  `UsageGradientBrush` (`UsageBarTemplate`), and the table shows status as the icon alone. Each
+  status has its own icon shape (`UsageStatus`: Optimal below 50% used, Good, Watch from 75%,
+  Needs attention from 90%). Status colours are for state only.
+- Fonts: Inter 400 and 500 and DM Mono 400 are WPF resources in `Assets/Fonts` (OFL, see
+  `THIRD_PARTY_NOTICES.md`). `App`'s static constructor makes Inter the default for every window;
+  it must touch `PackUriHelper` first, or the `pack://` URI throws before the app starts.
 - Balance rows (`IsBalance`) stay out of headline quota percentages and use neutral text, not a
   status colour. A balance-only card or row has the status "Balance".
 

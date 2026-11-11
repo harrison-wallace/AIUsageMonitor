@@ -27,6 +27,17 @@ status scale with an icon and a label on each status.
 
 - Status follows percent used: below 50 Optimal, 50 to 74 Good, 75 to 89 Watch, 90 and up Needs
   attention. Balances are neutral text, not amber, because status colours are reserved for state.
-- The fonts fall back to Segoe UI Variable and Consolas. Inter and DM Mono are not installed and
-  not embedded yet.
-- The Settings and OpenAI Accounts dialogs still use the old palette.
+- Inter (400, 500) and DM Mono (400) are bundled in `Assets/Fonts` (SIL OFL 1.1). `App` sets Inter
+  as the default font of every window. Every dialog uses the same tokens and the dark control
+  styles in `App.xaml`.
+
+## Owner exceptions to VortexOne (2026-11-11)
+
+- **Usage bars use a gradient.** The fill runs from green through amber to salmon across the whole
+  track and shows only the used part, so a fuller bar looks warmer. VortexOne forbids gradients;
+  the owner chose this.
+- **Status in the table is the icon alone**, with the label in a tooltip, to save width. Each
+  status keeps its own shape (filled check, outline check, triangle, octagon), so it never relies
+  on colour alone.
+- **Reset times are short** ("4h", "35m", "2d"), with the full date in the tooltip. The Credits
+  column sizes to its content and collapses when no shown account has credits.

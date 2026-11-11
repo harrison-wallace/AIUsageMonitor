@@ -14,6 +14,7 @@ public sealed class UsageOverlayViewModel : INotifyPropertyChanged
     private string _errorMessage = string.Empty;
     private bool _showUnusedProviders;
     private string _hiddenProvidersText = string.Empty;
+    private bool _hasCreditsColumn;
 
     public UsageOverlayViewModel()
     {
@@ -78,6 +79,13 @@ public sealed class UsageOverlayViewModel : INotifyPropertyChanged
     }
 
     public bool HasHiddenProviders => HiddenProvidersText.Length > 0;
+
+    // False when no shown account has a balance or a money cap; the table drops the column.
+    public bool HasCreditsColumn
+    {
+        get => _hasCreditsColumn;
+        private set => SetField(ref _hasCreditsColumn, value);
+    }
 
     public string AppVersionText => AppMetadata.VersionText;
 
@@ -340,6 +348,7 @@ public sealed class UsageOverlayViewModel : INotifyPropertyChanged
         }
 
         HiddenProvidersText = table.HiddenText;
+        HasCreditsColumn = table.HasCredits;
     }
 
     public void SetError(string message)

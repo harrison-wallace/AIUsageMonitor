@@ -10,6 +10,15 @@ which change gets which increment.
 
 ### Changed
 
+- Every dialog (Settings, Claude and OpenAI accounts, sign-in, logs, setup windows) uses the
+  VortexOne look: the same warm palette and dark buttons, fields, checkboxes, sliders, and
+  scrollbars. The default action button is off-white.
+- The bundled Inter and DM Mono fonts replace the system fonts (SIL OFL 1.1, `THIRD_PARTY_NOTICES.md`).
+- Usage bars fill with a gradient that warms from green to amber to salmon as more is used.
+- The account table is narrower: reset times are short ("4h", "Fable · 14h") with the full date in
+  a tooltip, the Credits column fits its content and disappears when no account has credits, and
+  status is an icon with its label in a tooltip. Compact cards use the short reset times too.
+
 - The full-size overlay is now one table: a group per provider, a row per account, and the same
   columns for every account (Session, Week, Other limits, Credits, Status). **Active / All** hides
   providers with no usage or no data, and the compact and mini strips follow the same choice.

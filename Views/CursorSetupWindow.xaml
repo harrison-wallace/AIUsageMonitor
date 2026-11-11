@@ -8,12 +8,12 @@
         MinHeight="480"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
     <Border Padding="22"
-            Background="#15171D">
+            Background="#2B2622">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -24,7 +24,7 @@
             <TextBlock Text="Cursor Setup"
                        FontSize="22"
                        FontWeight="SemiBold"
-                       Foreground="#F9FAFB" />
+                       Foreground="#F7F5F0" />
 
             <ScrollViewer Grid.Row="1"
                           Margin="0,20,0,16"
@@ -32,13 +32,13 @@
                 <StackPanel>
                     <RadioButton x:Name="PersonalSubscriptionRadioButton"
                                  Content="Personal subscription"
-                                 Foreground="#D6DAE1"
+                                 Foreground="#DAD2C1"
                                  FontSize="13"
                                  FontWeight="SemiBold"
                                  Checked="CursorModeRadioButtonOnChecked" />
                     <TextBlock Margin="24,6,0,0"
                                Text="Use the Cursor dashboard login for personal Pro, Pro+, Ultra, or Max accounts."
-                               Foreground="#8B93A1"
+                               Foreground="#AEA69C"
                                FontSize="12"
                                TextWrapping="Wrap" />
                     <Button x:Name="DashboardLoginButton"
@@ -50,40 +50,40 @@
                             Click="DashboardLoginButtonOnClick" />
                     <TextBlock x:Name="DashboardLoginStatusTextBlock"
                                Margin="24,8,0,0"
-                               Foreground="#8B93A1"
+                               Foreground="#AEA69C"
                                FontSize="12"
                                TextWrapping="Wrap" />
 
                     <Border Margin="0,18,0,18"
-                            BorderBrush="#2A303A"
+                            BorderBrush="#423C38"
                             BorderThickness="0,1,0,0" />
 
                     <RadioButton x:Name="TeamsApiKeyRadioButton"
                                  Content="Cursor Teams Admin API key"
-                                 Foreground="#D6DAE1"
+                                 Foreground="#DAD2C1"
                                  FontSize="13"
                                  FontWeight="SemiBold"
                                  Checked="CursorModeRadioButtonOnChecked" />
                     <TextBlock Margin="24,6,0,0"
                                Text="Use Cursor Teams spend data and compare it to a configured monthly included budget."
-                               Foreground="#8B93A1"
+                               Foreground="#AEA69C"
                                FontSize="12"
                                TextWrapping="Wrap" />
 
                     <StackPanel x:Name="TeamsApiSettingsPanel"
                                 Margin="24,12,0,0">
                         <TextBlock Text="Teams Admin API key"
-                                   Foreground="#A8AFBA"
+                                   Foreground="#AEA69C"
                                    FontSize="12" />
                         <TextBox x:Name="CursorApiKeyTextBox"
                                  Height="34"
                                  Margin="0,6,0,0"
                                  Padding="8,5"
                                  VerticalContentAlignment="Center"
-                                 Background="#1D2028"
-                                 BorderBrush="#343A46"
-                                 Foreground="#F9FAFB"
-                                 CaretBrush="#F9FAFB"
+                                 Background="#383330"
+                                 BorderBrush="#918879"
+                                 Foreground="#F7F5F0"
+                                 CaretBrush="#F7F5F0"
                                  FontSize="13" />
                         <DockPanel Margin="0,10,0,0">
                             <TextBox x:Name="CursorBudgetTextBox"
@@ -91,20 +91,20 @@
                                      Height="34"
                                      Padding="8,5"
                                      VerticalContentAlignment="Center"
-                                     Background="#1D2028"
-                                     BorderBrush="#343A46"
-                                     Foreground="#F9FAFB"
-                                     CaretBrush="#F9FAFB"
+                                     Background="#383330"
+                                     BorderBrush="#918879"
+                                     Foreground="#F7F5F0"
+                                     CaretBrush="#F7F5F0"
                                      FontSize="14" />
                             <TextBlock Margin="10,0,0,0"
                                        VerticalAlignment="Center"
                                        Text="monthly included budget dollars"
-                                       Foreground="#A8AFBA"
+                                       Foreground="#AEA69C"
                                        FontSize="12" />
                         </DockPanel>
                         <TextBlock Margin="0,8,0,0"
                                    Text="Teams Admin API keys start with key_. Personal crsr_ keys will not work here."
-                                   Foreground="#8B93A1"
+                                   Foreground="#AEA69C"
                                    FontSize="12"
                                    TextWrapping="Wrap" />
                     </StackPanel>
@@ -112,7 +112,7 @@
                     <TextBlock x:Name="ValidationTextBlock"
                                Margin="0,16,0,0"
                                TextWrapping="Wrap"
-                               Foreground="#FCA5A5"
+                               Foreground="#EF8A7A"
                                FontSize="12" />
                 </StackPanel>
             </ScrollViewer>

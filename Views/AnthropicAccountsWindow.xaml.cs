@@ -18,13 +18,13 @@ namespace AIUsageMonitor.Views;
 
 public partial class AnthropicAccountsWindow : Window
 {
-    private static readonly WpfBrush PrimaryTextBrush = new SolidColorBrush(WpfColor.FromRgb(0xD6, 0xDA, 0xE1));
-    private static readonly WpfBrush SecondaryTextBrush = new SolidColorBrush(WpfColor.FromRgb(0x8B, 0x93, 0xA1));
-    private static readonly WpfBrush ActiveBadgeBrush = new SolidColorBrush(WpfColor.FromRgb(0x6E, 0xE7, 0xA0));
-    private static readonly WpfBrush RowBackgroundBrush = new SolidColorBrush(WpfColor.FromRgb(0x1A, 0x1D, 0x25));
-    private static readonly WpfBrush RowBorderBrush = new SolidColorBrush(WpfColor.FromRgb(0x30, 0x36, 0x41));
-    private static readonly WpfBrush InputBackgroundBrush = new SolidColorBrush(WpfColor.FromRgb(0x1D, 0x20, 0x28));
-    private static readonly WpfBrush InputForegroundBrush = new SolidColorBrush(WpfColor.FromRgb(0xF9, 0xFA, 0xFB));
+    private static readonly WpfBrush PrimaryTextBrush = new SolidColorBrush(WpfColor.FromRgb(0xDA, 0xD2, 0xC1));
+    private static readonly WpfBrush SecondaryTextBrush = new SolidColorBrush(WpfColor.FromRgb(0xAE, 0xA6, 0x9C));
+    private static readonly WpfBrush ActiveBadgeBrush = new SolidColorBrush(WpfColor.FromRgb(0x7F, 0xD1, 0xA8));
+    private static readonly WpfBrush RowBackgroundBrush = new SolidColorBrush(WpfColor.FromRgb(0x38, 0x33, 0x30));
+    private static readonly WpfBrush RowBorderBrush = new SolidColorBrush(WpfColor.FromRgb(0x3F, 0x3A, 0x36));
+    private static readonly WpfBrush InputBackgroundBrush = new SolidColorBrush(WpfColor.FromRgb(0x2B, 0x26, 0x22));
+    private static readonly WpfBrush InputForegroundBrush = new SolidColorBrush(WpfColor.FromRgb(0xF7, 0xF5, 0xF0));
 
     private readonly AppSettingsService _settingsService;
     private readonly AppLogService _logService;
@@ -316,7 +316,7 @@ public partial class AnthropicAccountsWindow : Window
             var switchButton = new WpfButton
             {
                 Content = isActive ? "Active in CLI" : "Switch CLI to this",
-                Width = 150,
+                Width = 168,
                 Height = 28,
                 IsEnabled = !isActive && !_busy
             };
@@ -326,7 +326,7 @@ public partial class AnthropicAccountsWindow : Window
             var loginButton = new WpfButton
             {
                 Content = "Log in again",
-                Width = 150,
+                Width = 168,
                 Height = 28,
                 Margin = new Thickness(0, 6, 0, 0),
                 IsEnabled = !_busy
@@ -337,7 +337,7 @@ public partial class AnthropicAccountsWindow : Window
             var removeButton = new WpfButton
             {
                 Content = "Remove",
-                Width = 150,
+                Width = 168,
                 Height = 28,
                 Margin = new Thickness(0, 6, 0, 0),
                 IsEnabled = !_busy
@@ -349,7 +349,7 @@ public partial class AnthropicAccountsWindow : Window
         var creditsButton = new WpfButton
         {
             Content = account.ClaudeBilling is null ? "Connect usage credits" : "Reconnect credits",
-            Width = 150, Height = 28, FontSize = 13, Margin = new Thickness(0, 6, 0, 0),
+            Width = 168, Height = 28, FontSize = 13, Margin = new Thickness(0, 6, 0, 0),
             IsEnabled = !_busy && !string.IsNullOrWhiteSpace(account.AccountUuid)
         };
         creditsButton.Click += (_, _) =>
@@ -364,7 +364,7 @@ public partial class AnthropicAccountsWindow : Window
         {
             var disconnectButton = new WpfButton
             {
-                Content = "Disconnect credits", Width = 150, Height = 28, FontSize = 13,
+                Content = "Disconnect credits", Width = 168, Height = 28, FontSize = 13,
                 Margin = new Thickness(0, 6, 0, 0), IsEnabled = !_busy
             };
             disconnectButton.Click += async (_, _) =>

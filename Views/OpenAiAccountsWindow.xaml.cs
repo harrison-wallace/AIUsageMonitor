@@ -33,7 +33,7 @@ public partial class OpenAiAccountsWindow : Window
         AccountsPanel.Children.Clear();
         var accounts = settings.GetAccounts(KnownProviders.OpenAI);
         if (accounts.Count == 0)
-            AccountsPanel.Children.Add(new Wpf.TextBlock { Text = "No saved OpenAI accounts yet.", Foreground = Brush("#A8AFBA"), Margin = new Thickness(0, 10, 0, 10) });
+            AccountsPanel.Children.Add(new Wpf.TextBlock { Text = "No saved OpenAI accounts yet.", Foreground = Brush("#AEA69C"), Margin = new Thickness(0, 10, 0, 10) });
         foreach (var account in accounts)
         {
             var grid = new Wpf.Grid();
@@ -49,7 +49,7 @@ public partial class OpenAiAccountsWindow : Window
             var label = new Wpf.TextBox
             {
                 Text = account.Label, Height = 28, Margin = new Thickness(8, 0, 0, 0), Padding = new Thickness(6, 3, 6, 3),
-                Background = Brush("#20242D"), Foreground = Brush("#F9FAFB"), CaretBrush = Brush("#F9FAFB"), BorderBrush = Brush("#303641")
+                Background = Brush("#383330"), Foreground = Brush("#F7F5F0"), CaretBrush = Brush("#F7F5F0"), BorderBrush = Brush("#3F3A36")
             };
             label.LostFocus += (_, _) =>
             {
@@ -64,7 +64,7 @@ public partial class OpenAiAccountsWindow : Window
             info.Children.Add(new Wpf.TextBlock
             {
                 Text = string.IsNullOrWhiteSpace(account.Email) ? "Saved ChatGPT login" : account.Email,
-                Foreground = Brush("#A8AFBA"), FontSize = 12, Margin = new Thickness(24, 5, 0, 0), TextWrapping = TextWrapping.Wrap
+                Foreground = Brush("#AEA69C"), FontSize = 12, Margin = new Thickness(24, 5, 0, 0), TextWrapping = TextWrapping.Wrap
             });
             grid.Children.Add(info);
             var actions = new Wpf.StackPanel { Margin = new Thickness(14, 0, 0, 0) };
@@ -78,7 +78,7 @@ public partial class OpenAiAccountsWindow : Window
             grid.Children.Add(actions);
             AccountsPanel.Children.Add(new Wpf.Border
             {
-                Child = grid, Background = Brush("#1A1D25"), BorderBrush = Brush("#303641"), BorderThickness = new Thickness(1),
+                Child = grid, Background = Brush("#383330"), BorderBrush = Brush("#3F3A36"), BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(8), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 10)
             });
         }

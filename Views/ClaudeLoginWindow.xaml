@@ -6,33 +6,33 @@
         SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
     <Window.Resources>
         <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#D6DAE1" />
+            <Setter Property="Foreground" Value="#DAD2C1" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Margin" Value="0,12,0,4" />
         </Style>
         <Style x:Key="Hint" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#8B93A1" />
+            <Setter Property="Foreground" Value="#AEA69C" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style x:Key="Field" TargetType="TextBox">
             <Setter Property="Height" Value="32" />
             <Setter Property="Padding" Value="8,5,8,5" />
-            <Setter Property="Background" Value="#1D2028" />
-            <Setter Property="Foreground" Value="#F9FAFB" />
-            <Setter Property="CaretBrush" Value="#F9FAFB" />
-            <Setter Property="BorderBrush" Value="#303641" />
+            <Setter Property="Background" Value="#383330" />
+            <Setter Property="Foreground" Value="#F7F5F0" />
+            <Setter Property="CaretBrush" Value="#F7F5F0" />
+            <Setter Property="BorderBrush" Value="#3F3A36" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style x:Key="StepTitle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#F9FAFB" />
+            <Setter Property="Foreground" Value="#F7F5F0" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
@@ -93,7 +93,7 @@
         <TextBlock x:Name="StatusTextBlock"
                    Margin="0,14,0,0"
                    TextWrapping="Wrap"
-                   Foreground="#A8AFBA"
+                   Foreground="#AEA69C"
                    FontSize="12" />
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">

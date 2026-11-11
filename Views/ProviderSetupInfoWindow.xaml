@@ -7,12 +7,12 @@
         MinHeight="220"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="#15171D"
-        Foreground="#F9FAFB"
+        Background="#2B2622"
+        Foreground="#F7F5F0"
         Icon="/Assets/AppIcon.ico"
         ShowInTaskbar="False">
     <Border Padding="22"
-            Background="#15171D">
+            Background="#2B2622">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -23,12 +23,12 @@
             <TextBlock x:Name="TitleTextBlock"
                        FontSize="20"
                        FontWeight="SemiBold"
-                       Foreground="#F9FAFB" />
+                       Foreground="#F7F5F0" />
 
             <StackPanel Grid.Row="1"
                         Margin="0,18,0,0">
                 <TextBlock x:Name="MessageTextBlock"
-                           Foreground="#D6DAE1"
+                           Foreground="#DAD2C1"
                            FontSize="13"
                            TextWrapping="Wrap" />
                 <TextBlock Margin="0,14,0,0"

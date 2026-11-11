@@ -2,7 +2,7 @@
 
 Based on [Seth's AI Usage Monitor](https://github.com/SethRobinson/AIUsageMonitor) by Seth A. Robinson (MIT). This copy is rebranded and maintained for personal use.
 
-At full size the overlay is one table: a group per provider, a row per account, and the same columns for every account, so you can compare accounts at a glance. **Active** hides providers you are not using (no usage this period, or no data). **All** shows them again. It uses the VortexOne dark design language: a warm canvas, and a status with an icon and a label (Optimal, Good, Watch, Needs attention) instead of colour alone.
+At full size the overlay is one table: a group per provider, a row per account, and the same columns for every account, so you can compare accounts at a glance. **Active** hides providers you are not using (no usage this period, or no data). **All** shows them again. It uses the VortexOne dark design language: a warm canvas, the bundled Inter and DM Mono fonts, usage bars that warm in colour as they fill, and a status icon with its own shape for Optimal, Good, Watch, and Needs attention (hover it for the label).
 
 ![Full overlay: the account table](docs/screenshot-full.png)
 
