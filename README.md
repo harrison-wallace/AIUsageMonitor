@@ -20,11 +20,15 @@ Save multiple OpenAI accounts and monitor them independently of the login curren
 
 ![OpenAI accounts dialog](docs/screenshot-openai-accounts.png)
 
-# Download #
+# Install #
 
-Current version: V1.21, latest updated November 1, 2026.
+This is a personal copy of [SethRobinson/AIUsageMonitor](https://github.com/SethRobinson/AIUsageMonitor), forked at V1.21. It needs the .NET 10 SDK (`winget install Microsoft.DotNet.SDK.10`). Build and install it on this PC with:
 
-**[Download for Windows - Code signed by me, Seth A. Robinson](https://rtsoft.com/files/SethsAIUsageMonitor-win-x64.zip)**
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\install-local.ps1
+```
+
+The script installs to `%LOCALAPPDATA%\Programs\AIUsageMonitor` and starts the app. Run it again to update. Settings and saved accounts are kept. Changes since the fork are in [CHANGELOG.md](CHANGELOG.md).
 
 # What's new #
 
@@ -55,7 +59,7 @@ This is app was stupid easy to make, so you have a need for it, you undoubtely c
 - Layout adjusts as you drag the size to fit more or less info, UI scale slider in its Settings
 - Provider errors go to copyable logs and use backoff to avoid hammering services.
 - Build from VS Code with `dotnet build`; run with `dotnet run --project AIUsageMonitor.csproj`.
-- Build a standalone Windows x64 zip with `package-release.bat`.
+- Build and install a standalone Windows x64 exe on this PC with `tools\install-local.ps1`.
 
 Requires Windows and the .NET 10 SDK for development.
 

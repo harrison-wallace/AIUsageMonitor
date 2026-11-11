@@ -21,3 +21,6 @@ final/
 *.user
 *.suo
 *.userosscache
+
+# Local phase board and plans
+docs/plans/
