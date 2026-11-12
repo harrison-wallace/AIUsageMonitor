@@ -17,7 +17,7 @@ public partial class UsageOverlayWindow : Window
     private const string FullDisplayMode = "Full";
     private const string CompactDisplayMode = "Compact";
     private const string MiniDisplayMode = "Mini";
-    private const double CompactButtonsFallbackWidth = 175;
+    private const double CompactButtonsFallbackWidth = 30;
     private const double CompactButtonsGap = 10;
     private const uint SwpNoSize = 0x0001;
     private const uint SwpNoMove = 0x0002;
@@ -314,6 +314,15 @@ public partial class UsageOverlayWindow : Window
     private void LogsButtonOnClick(object sender, RoutedEventArgs e)
     {
         LogsRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void CompactMenuButtonOnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { ContextMenu: { } menu } button)
+        {
+            menu.PlacementTarget = button;
+            menu.IsOpen = true;
+        }
     }
 
     private void HeaderOnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

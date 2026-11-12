@@ -1171,35 +1171,35 @@
                 </Grid>
 
                 <StackPanel x:Name="CompactButtonsPanel"
-                            Orientation="Horizontal"
+                            Orientation="Vertical"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Style="{StaticResource CompactButtonsElementStyle}"
                             SizeChanged="CompactButtonsPanelOnSizeChanged">
-                    <Button Style="{StaticResource IconButtonStyle}"
-                            ToolTip="Options"
-                            Click="SettingsButtonOnClick">
-                        <Image Width="16"
-                               Height="16"
-                               Source="{StaticResource OptionsSlidersIcon}"
-                               Stretch="Uniform" />
-                    </Button>
                     <Button Content="↻"
+                            Margin="0"
                             Style="{StaticResource IconButtonStyle}"
                             ToolTip="Refresh now"
                             Click="ReloadButtonOnClick" />
-                    <Button Content="!"
+                    <Button Content="⋯"
+                            Margin="0,6,0,0"
                             Style="{StaticResource IconButtonStyle}"
-                            ToolTip="Logs"
-                            Click="LogsButtonOnClick" />
-                    <Button Content="—"
-                            Style="{StaticResource IconButtonStyle}"
-                            ToolTip="Minimize"
-                            Click="MinimizeButtonOnClick" />
-                    <Button Content="×"
-                            Style="{StaticResource IconButtonStyle}"
-                            ToolTip="Hide"
-                            Click="HideButtonOnClick" />
+                            ToolTip="Menu"
+                            Click="CompactMenuButtonOnClick">
+                        <Button.ContextMenu>
+                            <ContextMenu Placement="Bottom">
+                                <MenuItem Header="Options"
+                                          Click="SettingsButtonOnClick" />
+                                <MenuItem Header="Logs"
+                                          Click="LogsButtonOnClick" />
+                                <Separator />
+                                <MenuItem Header="Minimize"
+                                          Click="MinimizeButtonOnClick" />
+                                <MenuItem Header="Hide"
+                                          Click="HideButtonOnClick" />
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
                 </StackPanel>
 
                 <Thumb HorizontalAlignment="Right"

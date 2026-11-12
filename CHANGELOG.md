@@ -10,6 +10,8 @@ which change gets which increment.
 
 ### Changed
 
+- Compact mode shows a narrow rail of 2 buttons instead of a row of 5: Refresh on top, and a `⋯`
+  menu with Options, Logs, Minimize, and Hide. The cards get about 160 px more width.
 - Session and Week bars show a white tick at how much of the 5h session or the 7d week has
   passed. Below the bar are only the time left and a pace icon: a level arrow on pace, an amber
   rising arrow when usage is more than 10 points ahead of the time passed. Hover for the words.
